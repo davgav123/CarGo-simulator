@@ -1,0 +1,17 @@
+.container {
+    margin-top: 5%;
+}
+
+.buttons {
+    margin-top: 5%;
+    margin-left: 40%;
+    display: flex;
+}
+
+#registerDriver {
+    display: none;
+}
+
+#btnSignInDriver {
+    margin-left: 2%;
+}
