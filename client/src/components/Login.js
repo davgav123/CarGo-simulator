@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import SimpleReactValidator from 'simple-react-validator';
 import '../css/Login.css';
 
 export default class login extends Component {
@@ -18,8 +17,6 @@ export default class login extends Component {
           disabledDriver: false
       };
 
-      this.validator = new SimpleReactValidator();
-
       this.showFormForUser = this.showFormForUser.bind(this);
       this.onEmailChangeForUser = this.onEmailChangeForUser.bind(this);
       this.onPasswordChangeForUser = this.onPasswordChangeForUser.bind(this);
@@ -29,6 +26,21 @@ export default class login extends Component {
       this.onEmailChangeForDriver = this.onEmailChangeForDriver.bind(this);
       this.onPasswordChangeForDriver = this.onPasswordChangeForDriver.bind(this);
       this.handleSubmitForDriver = this.handleSubmitForDriver.bind(this);
+    }
+
+    checkValidityOfEmailAndPassword(entity) {
+        const validationEmailRegex = new RegExp("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$");
+        const validationPasswordRegex = new RegExp("^(?=.*\\d).{4,12}$");
+
+        if (entity.email === '' || !validationEmailRegex.test(entity.email)) {
+            window.alert("Please insert valid email!");
+            return false;
+        } else if (entity.password === '' || !validationPasswordRegex.test(entity.password)) {
+            window.alert("Please insert valid password!");
+            return false;
+        }
+
+        return true;
     }
 
     showFormForUser() {
@@ -90,14 +102,8 @@ export default class login extends Component {
     handleSubmitForUser() {
         const forUser = this.state.forUser;
 
-        const validationEmailRegex = new RegExp("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$");
-        const validationPasswordRegex = new RegExp("^(?=.*\\d).{4,12}$");
-        
-        if (forUser.email === '' || !validationEmailRegex.test(forUser.email)) {
-            window.alert("Please insert valid email!");
-            return ;
-        } else if (forUser.password === '' || !validationPasswordRegex.test(forUser.password)) {
-            window.alert("Please insert valid password!");
+        let valid = this.checkValidityOfEmailAndPassword(forUser);
+        if (!valid) {
             return ;
         }
 
@@ -128,14 +134,8 @@ export default class login extends Component {
     handleSubmitForDriver() {
         const forDriver = this.state.forDriver;
 
-        const validationEmailRegex = new RegExp("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$");
-        const validationPasswordRegex = new RegExp("^(?=.*\\d).{4,12}$");
-        
-        if (forDriver.email === '' || !validationEmailRegex.test(forDriver.email)) {
-            window.alert("Please insert valid email!");
-            return ;
-        } else if (forDriver.password === '' || !validationPasswordRegex.test(forDriver.password)) {
-            window.alert("Please insert valid password!");
+        let valid = this.checkValidityOfEmailAndPassword(forDriver);
+        if (!valid) {
             return ;
         }
 
