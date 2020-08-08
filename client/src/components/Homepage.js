@@ -2,6 +2,7 @@ import React from 'react';
 import '../css/Homepage.css'
 import Header from './Header';
 import ImgOnHomepage from './ImgOnHomepage';
+import Footer from './Footer';
 
 class Homepage extends React.Component {
 
@@ -10,6 +11,7 @@ class Homepage extends React.Component {
       <div className="homepage">
           <Header />
           <ImgOnHomepage />
+        <Footer />
       </div>
       );
   }

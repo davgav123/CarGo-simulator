@@ -1,0 +1,31 @@
+.footer {
+  width: 100%;
+  background-color: rgb(7, 62, 82);
+  border-top: 1px solid rgb(70, 171, 230);
+  padding: 40px 0;
+  position: relative;
+  color:white;
+  font-family: 'Montserrat';
+}
+
+.center {
+  max-width: 1220px;
+  margin: 0 0 0 80px;
+  width: 100%;
+}
+
+.clear {
+  clear: both;
+}
+
+.footer .copyright {
+  text-align: center;
+  font-size: 11px;
+  margin: 50px 0 0 0;
+}
+
+.aboutUs {
+  text-align: left;
+  margin-left: 10%;
+  margin-right: 10%;
+}
