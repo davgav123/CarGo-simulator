@@ -16,5 +16,7 @@ namespace CarGoSimulator.Interfaces
         public Task<IdentityResult> CreateAsync(ApplicationUser applicationUser, TUser user, string password, string role);
 
         public Task<IdentityResult> UpdateAsync(ApplicationUser applicationUser, TUser user);
+
+        public Task DeleteAsync(ApplicationUser applicationUser, TUser user);
     }
 }

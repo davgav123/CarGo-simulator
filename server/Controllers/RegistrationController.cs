@@ -58,7 +58,8 @@ namespace CarGoSimulator.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ErrorEnum.InvalidModelState);
 
-            if (null != await driverRepositoryManager.UserRepository.GetFirstByConditionAsync(d => d.RealId == model.RealId))
+            if (null != await driverRepositoryManager.UserRepository.GetFirstByConditionAsync(d => d.RealId == model.RealId && 
+                d.Status == Models.DBModels.User.AccountStatus.Open))
                 return BadRequest(ErrorEnum.RealIdAlreadyRegistered);
 
             return await RegisterAsync(model, "Driver", driverRepositoryManager);
@@ -123,7 +124,7 @@ namespace CarGoSimulator.Controllers
 
             var url = $"{configuration["ApplicationApiUrl"]}/api/auth/confirmemail?userid={user.Id}&token={validEmailToken}";
 
-            var email = "davidscepanovic96@gmail.com"; //applicationUser.Email
+            var email = user.Email;
             await mailService.SendEmailAsync(email, "Email confirmation - CallAndGo", $"<h1>Welcome to CallAndGo community</h1>" +
                                 $"<p>Please confirm your email by <a href='{url}'>Clicking here </a></p>");
         }

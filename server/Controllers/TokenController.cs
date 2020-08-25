@@ -49,14 +49,19 @@ namespace CarGoSimulator.Controllers
 
             Debug.Assert(user != null);
 
-            if (user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+            var passwordHasher = userManager.PasswordHasher;
+
+            if (user.RefreshTokenHash == null || user.RefreshTokenExpiryTime <= DateTime.Now || 
+                passwordHasher.VerifyHashedPassword(user, user.RefreshTokenHash, refreshToken) == PasswordVerificationResult.Failed)
                 return BadRequest(ErrorEnum.InvalidRefreshToken);
 
             var newAccessToken = tokenService.GenerateAccessToken(principal.Claims);
 
             var newRefreshToken = tokenService.GenerateRefreshToken();
 
-            user.RefreshToken = newRefreshToken;
+            var newRefreshTokenHash = passwordHasher.HashPassword(user, newRefreshToken);
+
+            user.RefreshTokenHash = newRefreshTokenHash;
 
             await userManager.UpdateAsync(user);
             return Ok(new
@@ -79,7 +84,7 @@ namespace CarGoSimulator.Controllers
             if (user == null)
                 return BadRequest(ErrorEnum.EmailNotRegistered);
 
-            user.RefreshToken = null;
+            user.RefreshTokenHash = null;
             user.RefreshTokenExpiryTime = DateTime.Now;
 
             await userManager.UpdateAsync(user);

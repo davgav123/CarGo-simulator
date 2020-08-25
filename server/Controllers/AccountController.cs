@@ -151,17 +151,28 @@ namespace CarGoSimulator.Controllers
             if (userName == null)
                 return Unauthorized(ErrorEnum.NoUserLogIn);
 
-            var user = await userManager.FindByNameAsync(userName);
+            var applicationUser = await userManager.FindByNameAsync(userName);
+
+            Debug.Assert(applicationUser != null);
+
+            if (!await userManager.CheckPasswordAsync(applicationUser, password))
+                return BadRequest(ErrorEnum.InvalidDeletePassword);
+
+            if (User.IsInRole("Driver"))
+                await DeleteUser(driverRepositoryManager, applicationUser);
+            else
+                await DeleteUser(customerRepositoryManager, applicationUser);
+            return Ok();
+        }
+
+        [NonAction]
+        private async Task DeleteUser<TUser>(IUserRepositoryManager<TUser> repositoryManager, ApplicationUser applicationUser) where TUser : User
+        {
+            var user = await repositoryManager.UserRepository.GetByIdAsync(applicationUser.Id);
 
             Debug.Assert(user != null);
 
-            if (!await userManager.CheckPasswordAsync(user, password))
-                return BadRequest(ErrorEnum.InvalidDeletePassword);
-
-            var result = await userManager.DeleteAsync(user);
-
-            Debug.Assert(result.Succeeded);
-            return Ok();
+            await repositoryManager.DeleteAsync(applicationUser, user);
         }
 
         [HttpGet("[action]")]

@@ -64,7 +64,7 @@ namespace CarGoSimulator.Controllers
             if (DateTime.Now < user.AccountActivationTime)
                 return Unauthorized(ErrorEnum.AccountActivationBlock);
 
-            var email = "davidscepanovic96@gmail.com"; //user.Email
+            var email = user.Email;
 
             if (!await userManager.CheckPasswordAsync(user, model.Password))
             {
@@ -82,13 +82,17 @@ namespace CarGoSimulator.Controllers
                     new Claim(ClaimTypes.Role, role)
             };
 
+            var passwordHasher = userManager.PasswordHasher;
+
             var accessToken = tokenService.GenerateAccessToken(claims);
 
             var refreshToken = tokenService.GenerateRefreshToken();
 
             var refreshTokenExpiryTime = DateTime.Now.AddDays(7);
 
-            user.RefreshToken = refreshToken;
+            var refreshTokenHash = passwordHasher.HashPassword(user, refreshToken);
+
+            user.RefreshTokenHash = refreshTokenHash;
             user.RefreshTokenExpiryTime = refreshTokenExpiryTime;
 
             await userManager.UpdateAsync(user);
@@ -129,7 +133,6 @@ namespace CarGoSimulator.Controllers
 
             var url = $"{configuration["ApplicationWebUrl"]}/ResetPassword?email={email}&token={validResetToken}";
 
-            // email = "davidscepanovic96@gmail.com"; //REMOVE
             await mailService.SendEmailAsync(email, "Reset Password - CallAndGo", "<h1>Follow the instructions to reset your password</h1>" +
                 $"<p>To reset your password <a href='{url}'>Click here</a></p>");
 

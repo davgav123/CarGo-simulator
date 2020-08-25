@@ -85,7 +85,7 @@ namespace CarGoSimulator.Controllers
                 var lastDrive = await drivesRepository.GetFirstByConditionAsync(d => d.CustomerRequestId == lastRequest.Id);
 
                 if (lastDrive != null && lastDrive.Status == Drive.DriveStatus.Open)
-                    BadRequest(ErrorEnum.DriveAlreadyOpen);
+                    return BadRequest(ErrorEnum.DriveAlreadyOpen);
             }
 
             var driveRequest = await FormatRequestAsync(model.StartAddress, model.Locality, userId);
@@ -170,7 +170,7 @@ namespace CarGoSimulator.Controllers
                 var lastDrive = await drivesRepository.GetFirstByConditionAsync(d => d.DriverRequestId == lastRequest.Id);
 
                 if (lastDrive != null && lastDrive.Status == Drive.DriveStatus.Open)
-                    BadRequest(ErrorEnum.DriveAlreadyOpen);
+                    return BadRequest(ErrorEnum.DriveAlreadyOpen);
             }
 
             var driverRequest = await FormatRequestAsync(model.StartAddress, model.Locality, userId);
