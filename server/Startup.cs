@@ -96,7 +96,7 @@ namespace CarGoSimulator
             services.AddSingleton<IDriveService, DriveService>();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider,
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider, 
             IRepository<Drive> drivesRepository, IRepository<DriveRequest> requestsRepository)
         {
             if (env.IsDevelopment())
@@ -152,7 +152,7 @@ namespace CarGoSimulator
             var drives = drivesRepository.GetAllAsync();
             drives.Wait();
 
-            foreach (var drive in drives.Result)
+            foreach (var drive in drives.Result) 
                 if (drive.Status == Drive.DriveStatus.Open)
                 {
                     drive.Status = Drive.DriveStatus.Terminated;

@@ -31,10 +31,15 @@ namespace CarGoSimulator.Data
         {
             var driveStatusConverter = new EnumToStringConverter<Drive.DriveStatus>();
             var requestStatusConverter = new EnumToStringConverter<DriveRequest.RequestStatus>();
+            var accountStatusConverter = new EnumToStringConverter<User.AccountStatus>();
 
             modelBuilder.Entity<Drive>().Property(e => e.Status).HasConversion(driveStatusConverter);
 
             modelBuilder.Entity<DriveRequest>().Property(e => e.Status).HasConversion(requestStatusConverter);
+
+            modelBuilder.Entity<Customer>().Property(e => e.Status).HasConversion(accountStatusConverter);
+
+            modelBuilder.Entity<Driver>().Property(e => e.Status).HasConversion(accountStatusConverter);
 
             base.OnModelCreating(modelBuilder);
         }

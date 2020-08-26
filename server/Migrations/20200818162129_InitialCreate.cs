@@ -40,7 +40,7 @@ namespace CarGoSimulator.Migrations
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
-                    RefreshToken = table.Column<string>(nullable: true),
+                    RefreshTokenHash = table.Column<string>(nullable: true),
                     RefreshTokenExpiryTime = table.Column<DateTime>(nullable: false),
                     AccountActivationTime = table.Column<DateTime>(nullable: false),
                     ConfirmationEmailBlockTime = table.Column<DateTime>(nullable: false),
@@ -59,7 +59,8 @@ namespace CarGoSimulator.Migrations
                     CreateDateTime = table.Column<DateTime>(nullable: true),
                     UpdateDateTime = table.Column<DateTime>(nullable: true),
                     FirstName = table.Column<string>(nullable: true),
-                    LastName = table.Column<string>(nullable: true)
+                    LastName = table.Column<string>(nullable: true),
+                    Status = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -92,6 +93,7 @@ namespace CarGoSimulator.Migrations
                     Id = table.Column<string>(nullable: false),
                     CreateDateTime = table.Column<DateTime>(nullable: true),
                     UpdateDateTime = table.Column<DateTime>(nullable: true),
+                    Status = table.Column<string>(nullable: false),
                     RealId = table.Column<string>(nullable: false),
                     DateOfBirth = table.Column<DateTime>(nullable: false),
                     FirstName = table.Column<string>(nullable: false),

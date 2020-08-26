@@ -12,5 +12,13 @@ namespace CarGoSimulator.Models.DBModels
         public virtual string FirstName { get; set; }
 
         public virtual string LastName { get; set; }
+
+        public enum AccountStatus
+        {
+            Open,
+            Cancelled
+        }
+
+        public AccountStatus Status { get; set; } = AccountStatus.Open;
     }
 }

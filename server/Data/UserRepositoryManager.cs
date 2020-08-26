@@ -4,6 +4,7 @@ using CarGoSimulator.Models.DBModels;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -65,5 +66,17 @@ namespace CarGoSimulator.Data
             return IdentityResult.Success;
         }
 
+        public async Task DeleteAsync(ApplicationUser applicationUser, TUser user)
+        {
+            var result = await userManager.DeleteAsync(applicationUser);
+
+            Debug.Assert(result.Succeeded);
+
+            user.Status = Models.DBModels.User.AccountStatus.Cancelled;
+
+            userRepository.Update(user);
+
+            await userRepository.ApplyChangesAsync();
+        }
     }
 }

@@ -18,9 +18,9 @@ namespace CarGoSimulator.Models.Dtos
 
         public string FirstDistance { get; set; }
 
-        public string FirstDuration { get; set; }
-
         public string SecondDistance { get; set; }
+
+        public string FirstDuration { get; set; }
 
         public string SecondDuration { get; set; }
     }

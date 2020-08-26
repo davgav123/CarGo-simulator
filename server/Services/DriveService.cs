@@ -22,7 +22,7 @@ namespace CarGoSimulator.Services
 
         private readonly ConcurrentDictionary<string, Drive> userResponses = new ConcurrentDictionary<string, Drive>();
 
-        private readonly SemaphoreSlim cancellationLock = new SemaphoreSlim(1, 1);
+        private readonly ConcurrentDictionary<string, SemaphoreSlim> cancellationLocks = new ConcurrentDictionary<string, SemaphoreSlim>();
 
         private readonly IUrlService urlService;
         private readonly IMapper mapper;
@@ -49,39 +49,41 @@ namespace CarGoSimulator.Services
 
         private async Task<Drive> WaitForUserAsync(DriveRequest userRequest, Directions directions = null)
         {
-            var newLock = new SemaphoreSlim(0, 1);
-            userLocks[userRequest.Id] = newLock;
+            var userRequestId = userRequest.Id;
 
-            userResponses[userRequest.Id] = null;
+            var userLock = new SemaphoreSlim(0, 1);
+            userLocks[userRequestId] = userLock;
+
+            userResponses[userRequestId] = null;
+
+            var cancellationLock = new SemaphoreSlim(1, 1);
+            cancellationLocks[userRequestId] = cancellationLock;
 
             userRequests.Enqueue((userRequest, directions));
 
             requestsSemaphore.Release();
 
             if (directions == null)
+                await userLock.WaitAsync();
+            else
+                await userLock.WaitAsync(59000);
+
+            try
             {
-                await newLock.WaitAsync();
-            }
-            else if(!await newLock.WaitAsync(60000))
-            { 
-                Drive autoWakeUpResponse;
-                try
-                {
-                    await cancellationLock.WaitAsync();
+                await cancellationLock.WaitAsync();
 
-                    userLocks.TryRemove(userRequest.Id, out var _);
+                userLocks.TryRemove(userRequestId, out var _);
 
-                    userResponses.TryRemove(userRequest.Id, out autoWakeUpResponse);
-                }
-                finally
-                {
-                    cancellationLock.Release();
-                }
-                return autoWakeUpResponse;
+                userResponses.TryRemove(userRequestId, out var response);
+
+                cancellationLocks.TryRemove(userRequestId, out var _);
+
+                return response;
             }
-            
-            userResponses.TryRemove(userRequest.Id, out var response);
-            return response;
+            finally
+            {
+                cancellationLock.Release();
+            }
         }
 
         private async Task ForeverHandleRequests()
@@ -113,7 +115,9 @@ namespace CarGoSimulator.Services
             var userRequest = userRequestTypePair.Item1;
             var directions = userRequestTypePair.Item2;
 
-            if (!await IsActiveAsync(userRequest.Id))
+            var userRequestId = userRequest.Id;
+
+            if (!await IsActiveAsync(userRequestId))
                 return;
 
             var subLocalityLocks = localitySubLocalityLocks[userRequest.Locality];
@@ -124,6 +128,9 @@ namespace CarGoSimulator.Services
             try
             {
                 await subLocalityLock.WaitAsync();
+
+                if (!await IsActiveAsync(userRequestId))
+                    return;
 
                 if (directions == null)
                     PutDriver(pendingDriversRequests, userRequest);
@@ -155,9 +162,6 @@ namespace CarGoSimulator.Services
         private async Task ServeCustomerAsync(Dictionary<string, ConcurrentDictionary<string, 
             LinkedList<DriveRequest>>> pendingDriversRequests, DriveRequest customerRequest, Directions directions)
         {
-            if (!await IsActiveAsync(customerRequest.Id))
-                return;
-
             if (!pendingDriversRequests[customerRequest.Locality].TryGetValue(customerRequest.SubLocality, out var subLocalityRequests))
             {
                 userRequests.Enqueue((customerRequest, directions));
@@ -203,39 +207,41 @@ namespace CarGoSimulator.Services
                 if (directionsRoot.status != "OK")
                     continue;
 
+                var customerRequestId = customerRequest.Id;
+                if (!cancellationLocks.TryGetValue(customerRequestId, out var customerCancellationLock))
+                    return;
+
                 try
                 {
-                    await cancellationLock.WaitAsync();
+                    await customerCancellationLock.WaitAsync();
 
-                    var isDriverActive = userResponses.TryGetValue(driverRequestId, out var _);
-
-                    var isCustomerActive = userResponses.TryGetValue(customerRequest.Id, out var _);
-
-                    if (!isCustomerActive && isDriverActive)
+                    if (!userResponses.ContainsKey(customerRequestId))
                         return;
 
                     subLocalityRequests.Remove(node);
 
-                    if (!isDriverActive && isCustomerActive)
+                    if (!cancellationLocks.TryRemove(driverRequestId, out var driverCancellationLock))
                         continue;
 
-                    if (!isDriverActive && !isCustomerActive)
-                        return;
-
-                    if (isCustomerActive && isDriverActive)
+                    try
                     {
-                        var secondDirections = mapper.Map<Directions>(directionsRoot);
+                        await driverCancellationLock.WaitAsync();
+
+                        if (!userResponses.ContainsKey(driverRequestId))
+                            continue;
+
+                        var firstDirections = mapper.Map<Directions>(directionsRoot);
 
                         var result = new Drive
                         {
                             CustomerRequestId = customerRequest.Id,
                             DriverRequestId = driverRequest.Id,
-                            FirstPolyline = directions.Polyline,
-                            SecondPolyline = secondDirections.Polyline,
-                            FirstDistance = directions.Distance,
-                            SecondDistance = secondDirections.Distance,
-                            FirstDuration = directions.Duration,
-                            SecondDuration = secondDirections.Duration
+                            FirstPolyline = firstDirections.Polyline,
+                            SecondPolyline = directions.Polyline,
+                            FirstDistance = firstDirections.Distance,
+                            SecondDistance = directions.Distance,
+                            FirstDuration = firstDirections.Duration,
+                            SecondDuration = directions.Duration
                         };
 
                         var driveId = result.Id;
@@ -245,21 +251,29 @@ namespace CarGoSimulator.Services
 
                         userResponses[customerRequest.Id] = result;
                         userResponses[driverRequestId] = result;
+
+                        userLocks.TryRemove(driverRequestId, out var driverLock);
+
+                        userLocks.TryRemove(customerRequest.Id, out var customerLock);
+
+                        driverLock.Release();
+
+                        customerLock.Release();
+                        return;
                     }
-
-                    userLocks.TryRemove(driverRequestId, out var driverLock);
-
-                    userLocks.TryRemove(customerRequest.Id, out var customerLock);
-
-                    customerLock.Release();
-
-                    driverLock.Release();
+                    catch(SemaphoreFullException)
+                    {
+                        return;
+                    }
+                    finally
+                    {
+                        driverCancellationLock.Release();
+                    }
                 }
                 finally
                 {
-                    cancellationLock.Release();
+                    customerCancellationLock.Release();
                 }
-                return;
             }
 
             userRequests.Enqueue((customerRequest, directions));
@@ -269,41 +283,50 @@ namespace CarGoSimulator.Services
 
         private async Task<bool> IsActiveAsync(string userDriveRequestId)
         {
-            bool result;
+            if (!cancellationLocks.TryGetValue(userDriveRequestId, out var cancellationLock))
+                return false;
+
             try
             {
                 await cancellationLock.WaitAsync();
 
-                result = userResponses.TryGetValue(userDriveRequestId, out var _);
+                return userResponses.ContainsKey(userDriveRequestId);
             }
             finally
             {
                 cancellationLock.Release();
             }
-            return result;
         }
 
         public async Task<bool> CancelRequestAsync(string userDriveRequestId)
         {
+            if (!cancellationLocks.TryGetValue(userDriveRequestId, out var cancellationLock))
+                return false;
+
             try
             {
                 await cancellationLock.WaitAsync();
 
-                if (userResponses.TryGetValue(userDriveRequestId, out var directionsResult) && directionsResult == null)
-                {
-                    userResponses.TryRemove(userDriveRequestId, out _);
+                if (!userResponses.TryGetValue(userDriveRequestId, out var directionsResult) || directionsResult != null)
+                    return false;
 
-                    userLocks.TryRemove(userDriveRequestId, out var oldLock);
+                userLocks.TryRemove(userDriveRequestId, out var oldLock);
 
-                    oldLock.Release();
-                    return true;
-                }
+                userResponses.TryRemove(userDriveRequestId, out _);
+
+                cancellationLocks.TryRemove(userDriveRequestId, out _);
+
+                oldLock.Release();
+                return true;
+            }
+            catch(SemaphoreFullException)
+            {
+                return true;
             }
             finally
             {
                 cancellationLock.Release();
             }
-            return false;
         }
 
     }
