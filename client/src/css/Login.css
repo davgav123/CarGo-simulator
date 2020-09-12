@@ -1,17 +1,49 @@
+.login {
+    display: flex;
+}
+
 .container {
     margin-top: 5%;
 }
 
-.buttons {
-    margin-top: 5%;
-    margin-left: 40%;
-    display: flex;
+.titleFormLogin {
+    margin-top: 50%;
+    margin-bottom: 10%;
 }
 
-#logInDriver {
-    display: none;
+#submitLogin {
+    background-color: rgb(7, 62, 82);
 }
 
-#btnLogInDriver {
-    margin-left: 2%;
+.imgLogin{
+    width: 45%;
+    position: fixed;
+}
+
+.imgLogin img {
+    width: 100%;
+    height: 100vh;
+
+}
+
+.goToForgotPassword {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.container {
+    padding-left: 0;
+}
+
+
+@media (max-width: 600px){
+    .imgLogin {
+        display: none;
+    }
+
+    .titleFormLogin {
+        margin-top: 20%;
+        margin-bottom: 10%;
+    }
+
 }

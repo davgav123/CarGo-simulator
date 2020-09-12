@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import '../css/Register.css';
+import Slideshow from './Slideshow';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 
 class Register extends Component {
     constructor(props) {
@@ -421,114 +424,120 @@ class Register extends Component {
 
         return (
             <div className="signin">
-
-                <div className="buttons">
-                    <button type="button" disabled={this.state.disabledUser} onClick={this.showFormForUser} id="btnSignInUser" className="btn btn-success">Register as a user</button>
-                    <button type="button" disabled={this.state.disabledDriver} onClick={this.showFormForDriver} id="btnSignInDriver" className="btn btn-success">Register as a driver</button>
+                <div className="slider">
+                    <Slideshow />
                 </div>
+                <div className="formular">
+                    <a href='/' className="back"><FontAwesomeIcon icon={faAngleLeft} className="fi_menu"/> Vratite se na početnu</a>
+                    <div className="buttonsReg">
+                        <button type="button" disabled={this.state.disabledUser} onClick={this.showFormForUser} id="btnSignInUser" className="btn btn-success">Korisnik</button>
+                        <button type="button" disabled={this.state.disabledDriver} onClick={this.showFormForDriver} id="btnSignInDriver" className="btn btn-success">Vozač</button>
+                    </div>
 
-                <div className="container" id="registerUser">
-                    <h2>Register as a user</h2>
-                    <form id="formUser">
-                        <div className="form-group">
-                            <label htmlFor="email">Email:</label>
-                            <input type="email" className="form-control" id="emailUser" placeholder="Enter email" name="email" onChange={this.onEmailChangeForUser}/>
-                        </div>
+                    <div className="container" id="registerUser">
+                        <h2 className="titleForm">Registrujte se kao korisnik</h2>
+                        <form id="formUser">
+                            <div className="form-group">
+                                <label htmlFor="email">Email:</label>
+                                <input type="email" className="form-control" id="emailUser" placeholder="Unesite email" name="email" onChange={this.onEmailChangeForUser}/>
+                            </div>
 
-                        <div className="form-group">
-                            <label htmlFor="name">First name:</label>
-                            <input type="text" className="form-control" id="nameUser" placeholder="Enter first name" name="name" onChange={this.onNameChangeForUser.bind(this, "name")}/>
-                        </div>
+                            <div className="form-group">
+                                <label htmlFor="name">Ime:</label>
+                                <input type="text" className="form-control" id="nameUser" placeholder="Unesite ime" name="name" onChange={this.onNameChangeForUser.bind(this, "name")}/>
+                            </div>
 
-                        <div className="form-group">
-                            <label htmlFor="lastName">Last name:</label>
-                            <input type="text" className="form-control" id="lastnameUser" placeholder="Enter last name" name="lastName" onChange={this.onNameChangeForUser.bind(this, "lastName")}/>
-                        </div>
+                            <div className="form-group">
+                                <label htmlFor="lastName">Prezime:</label>
+                                <input type="text" className="form-control" id="lastnameUser" placeholder="Unesite prezime" name="lastName" onChange={this.onNameChangeForUser.bind(this, "lastName")}/>
+                            </div>
 
-                        <div className="form-group">
-                            <label htmlFor="pwd">Password:</label>
-                            <input type="password" className="form-control" id="pwdUser" placeholder="Enter password" name="pwd" onChange={this.onPasswordChangeForUser}/>
-                        </div>
+                            <div className="form-group">
+                                <label htmlFor="pwd">Šifra:</label>
+                                <input type="password" className="form-control" id="pwdUser" placeholder="Unesite šifru" name="pwd" onChange={this.onPasswordChangeForUser}/>
+                            </div>
 
-                        <div className="form-group">
-                            <label htmlFor="pwd">Confirm password:</label>
-                            <input type="password" className="form-control" id="pwdUserConfirm" placeholder="Enter password" name="pwd" onChange={this.onPasswordConfirmChangeForUser}/>
-                        </div>
+                            <div className="form-group">
+                                <label htmlFor="pwd">Potvrdite šifru:</label>
+                                <input type="password" className="form-control" id="pwdUserConfirm" placeholder="Unesite šifru" name="pwd" onChange={this.onPasswordConfirmChangeForUser}/>
+                            </div>
 
-                        <button type="button" onClick={this.handleSubmitForUser} className="btn btn-success">Submit</button>
-                    </form>
+                            <button type="button" onClick={this.handleSubmitForUser} id="submit" className="btn btn-success">Kreirajte nalog</button>
+                            <p className="goToLogin">Već imate nalog? <a href='/login'>Prijavite se!</a></p>
+                        </form>
+                    </div>
+
+                    <div className="container" id="registerDriver">
+                        <h2 className="titleForm">Registrujte se kao vozač</h2>
+                        <form id="formDriver">
+                            <div className="form-group">
+                                <label htmlFor="email">Email:</label>
+                                <input type="email" className="form-control" id="emailDriver" placeholder="Unesite email" name="email" onChange={this.onEmailChangeForDriver}/>
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor="name">Ime:</label>
+                                <input type="text" className="form-control" id="nameDriver" placeholder="Unesite ime" name="name" onChange={this.onNameChangeForDriver.bind(this, "name")}/>
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor="lastName">Prezime:</label>
+                                <input type="text" className="form-control" id="lastnameDriver" placeholder="Unesite prezime" name="lastName" onChange={this.onNameChangeForDriver.bind(this, "lastName")}/>
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor="personalId">JMGB:</label>
+                                <input type="text" className="form-control" id="personalId" placeholder="Unesite jmbg" name="personalId" onChange={this.onPersonalIdChange.bind(this)}/>
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor="city">Grad:</label>
+                                <select id="selectCity" className="form-control" onChange={this.onCityChange.bind(this)}>
+                                    <option value="bg">Beograd</option>
+                                    <option value="ns">Novi Sad</option>
+                                    <option value="kv">Kraljevo</option>
+                                    <option value="ca">Čačak</option>
+                                    <option value="ni">Nis</option>
+                                    <option value="kg">Kragujevac</option>
+                                    <option value="su">Subotica</option>
+                                </select>
+                            </div>
+                            
+                            <div className="form-group">
+                                <label htmlFor="address">Adresa:</label>
+                                <input type="text" className="form-control" id="address" placeholder="Simina 5, 11000 Belgrade" name="address" onChange={this.onAddressChange.bind(this)}/>
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor="phoneNumber">Broj telefona:</label>
+                                <input type="text" className="form-control" id="phoneNumber" placeholder="Unesite broj telefona" name="phoneNumber" onChange={this.onPhoneNumberChange.bind(this)} />
+                            </div> 
+
+                            <div className="form-group">
+                                <label htmlFor="vehicleId">Broj tablica vozila:</label>
+                                <input type="text" className="form-control" id="vehicleId" placeholder="Unesite broj tablica" name="vehicleId" onChange={this.onVehicleIdChange.bind(this)} />
+                            </div> 
+
+                            <div className="form-group">
+                                <label htmlFor="vehicleModel">Model vozila:</label>
+                                <input type="text" className="form-control" id="vehicleModel" placeholder="Unesite model vozila" name="vehicleModel" onChange={this.onVehicleModelChange.bind(this)} />
+                            </div> 
+
+                            <div className="form-group">
+                                <label htmlFor="pwd">Šifra:</label>
+                                <input type="password" className="form-control" id="pwdDriver" placeholder="Unesite šifru" name="pwd" onChange={this.onPasswordChangeForDriver}/>
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor="pwd">Potvrdite šifru:</label>
+                                <input type="password" className="form-control" id="pwdDriverConfirm" placeholder="Unesite šifru" name="pwd" onChange={this.onPasswordConfirmChangeForDriver}/>
+                            </div>
+
+                            <button type="button" onClick={this.handleSubmitForDriver} id="submitDriver" className="btn btn-success">Kreirajte nalog</button>
+                            <p className="goToLogin">Već imate nalog? <a href='/login'>Prijavite se!</a></p>
+                        </form>
+                    </div>
                 </div>
-
-                <div className="container" id="registerDriver">
-                    <h2>Register as a driver</h2>
-                    <form id="formDriver">
-                        <div className="form-group">
-                            <label htmlFor="email">Email:</label>
-                            <input type="email" className="form-control" id="emailDriver" placeholder="Enter email" name="email" onChange={this.onEmailChangeForDriver}/>
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="name">First name:</label>
-                            <input type="text" className="form-control" id="nameDriver" placeholder="Enter first name" name="name" onChange={this.onNameChangeForDriver.bind(this, "name")}/>
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="lastName">Last name:</label>
-                            <input type="text" className="form-control" id="lastnameDriver" placeholder="Enter last name" name="lastName" onChange={this.onNameChangeForDriver.bind(this, "lastName")}/>
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="personalId">Personal id:</label>
-                            <input type="text" className="form-control" id="personalId" placeholder="Enter personal id" name="personalId" onChange={this.onPersonalIdChange.bind(this)}/>
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="city">City:</label>
-                            <select id="selectCity" className="form-control" onChange={this.onCityChange.bind(this)}>
-                                <option value="bg">Belgrade</option>
-                                <option value="ns">Novi Sad</option>
-                                <option value="kv">Kraljevo</option>
-                                <option value="ca">Cacak</option>
-                                <option value="ni">Nis</option>
-                                <option value="kg">Kragujevac</option>
-                                <option value="su">Subotica</option>
-                            </select>
-                        </div>
-                        
-                        <div className="form-group">
-                            <label htmlFor="address">Address:</label>
-                            <input type="text" className="form-control" id="address" placeholder="Simina 5, 11000 Belgrade" name="address" onChange={this.onAddressChange.bind(this)}/>
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="phoneNumber">Phone number:</label>
-                            <input type="text" className="form-control" id="phoneNumber" placeholder="Enter phone number" name="phoneNumber" onChange={this.onPhoneNumberChange.bind(this)} />
-                        </div> 
-
-                        <div className="form-group">
-                            <label htmlFor="vehicleId">Vehicle id:</label>
-                            <input type="text" className="form-control" id="vehicleId" placeholder="Enter vehicle id" name="vehicleId" onChange={this.onVehicleIdChange.bind(this)} />
-                        </div> 
-
-                        <div className="form-group">
-                            <label htmlFor="vehicleModel">Vehicle model:</label>
-                            <input type="text" className="form-control" id="vehicleModel" placeholder="Enter vehicle model" name="vehicleModel" onChange={this.onVehicleModelChange.bind(this)} />
-                        </div> 
-
-                        <div className="form-group">
-                            <label htmlFor="pwd">Password:</label>
-                            <input type="password" className="form-control" id="pwdDriver" placeholder="Enter password" name="pwd" onChange={this.onPasswordChangeForDriver}/>
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="pwd">Confirm password:</label>
-                            <input type="password" className="form-control" id="pwdDriverConfirm" placeholder="Enter password" name="pwd" onChange={this.onPasswordConfirmChangeForDriver}/>
-                        </div>
-
-                        <button type="button" onClick={this.handleSubmitForDriver} className="btn btn-success">Submit</button>
-                    </form>
-                </div>
-
             </div>
     );
   }

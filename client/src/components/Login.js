@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import '../css/Login.css';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 
 export default class login extends Component {
     constructor(props) {
@@ -8,24 +10,12 @@ export default class login extends Component {
           forUser: {
               email: '',
               password: ''
-          },
-          forDriver: {
-              email: '',
-              password: ''
-          },
-          disabledUser: true,
-          disabledDriver: false
+          }
       };
 
-      this.showFormForUser = this.showFormForUser.bind(this);
       this.onEmailChangeForUser = this.onEmailChangeForUser.bind(this);
       this.onPasswordChangeForUser = this.onPasswordChangeForUser.bind(this);
       this.handleSubmitForUser = this.handleSubmitForUser.bind(this);
-
-      this.showFormForDriver = this.showFormForDriver.bind(this);
-      this.onEmailChangeForDriver = this.onEmailChangeForDriver.bind(this);
-      this.onPasswordChangeForDriver = this.onPasswordChangeForDriver.bind(this);
-      this.handleSubmitForDriver = this.handleSubmitForDriver.bind(this);
     }
 
     checkValidityOfEmailAndPassword(entity) {
@@ -41,42 +31,6 @@ export default class login extends Component {
         }
 
         return true;
-    }
-
-    showFormForUser() {
-      const formUser = document.getElementById("logInUser");
-      const formDriver = document.getElementById("logInDriver");
-
-      formUser.style.display = "block";
-      formDriver.style.display = "none";
-
-      this.setState({
-          disabledUser: true,
-          disabledDriver: false,
-          forUser: {
-              email: '',
-              password: ''
-          }
-      });
-      document.getElementById("formDriver").reset();
-    }
-
-    showFormForDriver() {
-        const formUser = document.getElementById("logInUser");
-        const formDriver = document.getElementById("logInDriver");
-
-        formUser.style.display = "none";
-        formDriver.style.display = "block";
-
-        this.setState({
-            disabledUser: false,
-            disabledDriver: true,
-            forDriver: {
-                email: '',
-                password: ''
-            }
-        });
-        document.getElementById("formUser").reset();
     }
 
     onEmailChangeForUser(email) {
@@ -111,81 +65,37 @@ export default class login extends Component {
         console.log(forUser);
     }
 
-    onEmailChangeForDriver(email) {
-        const forDriver = {
-            email: email.target.value,
-            password: this.state.forDriver.password
-        }
-        this.setState({
-            forDriver
-        });
-    }
-
-    onPasswordChangeForDriver(password) {
-        const forDriver = {
-            email: this.state.forDriver.email,
-            password: password.target.value
-        };
-        this.setState({
-            forDriver
-        });
-    }
-
-    handleSubmitForDriver() {
-        const forDriver = this.state.forDriver;
-
-        let valid = this.checkValidityOfEmailAndPassword(forDriver);
-        if (!valid) {
-            return ;
-        }
-
-        document.getElementById("formDriver").reset();
-        console.log(forDriver);
-    }
-
     render() {
         return (
         <div className="login">
-
-            <div className="buttons">
-                <button type="button" disabled={this.state.disabledUser} onClick={this.showFormForUser} id="btnLogInUser" className="btn btn-success">Log in as a user</button>
-                <button type="button" disabled={this.state.disabledDriver} onClick={this.showFormForDriver} id="btnLogInDriver" className="btn btn-success">Log in as a driver</button>
+            <div className="imgLogin">
+                <img src="/slika3.jpg" alt=''></img>
             </div>
+            <div className="formular">
 
-            <div className="container" id="logInUser">
-                <h2>Log in as a user</h2>
-                <form id="formUser">
-                    <div className="form-group">
-                        <label htmlFor="email">Email:</label>
-                        <input type="email" className="form-control" id="emailUser" placeholder="Enter email" name="email" onChange={this.onEmailChangeForUser}/>
-                    </div>
+                <a href='/' className="back"><FontAwesomeIcon icon={faAngleLeft} className="fi_menu"/> Vratite se na početnu</a>
+                <div className="container" id="logInUser">
 
-                    <div className="form-group">
-                        <label htmlFor="pwd">Password:</label>
-                        <input type="password" className="form-control" id="pwdUser" placeholder="Enter password" name="pwd" onChange={this.onPasswordChangeForUser}/>
-                    </div>
+                    <h2 className="titleFormLogin">Prijavite se na svoj nalog</h2>
+                    <form id="formUser">
+                        <div className="form-group">
+                            <label htmlFor="email">Email:</label>
+                            <input type="email" className="form-control" id="emailUser" placeholder="Unesite email" name="email" onChange={this.onEmailChangeForUser}/>
+                        </div>
 
-                    <button type="button" onClick={this.handleSubmitForUser} className="btn btn-success">Log In</button>
-                </form>
+                        <div className="form-group">
+                            <label htmlFor="pwd">Šifra:</label>
+                            <input type="password" className="form-control" id="pwdUser" placeholder="Unesite šifru" name="pwd" onChange={this.onPasswordChangeForUser}/>
+                        </div>
+
+                        <button type="button" onClick={this.handleSubmitForUser} id="submitLogin" className="btn btn-success">Prijavite se</button>
+                        <div className="goToForgotPassword"> 
+                            <a href="/forgotPassword">Zaboravili ste šifru?</a>
+                        </div>
+                        <p className="goToLogin">Nemate svoj nalog? <a href='/register'>Kreirajte ga!</a></p>
+                    </form>
+                </div>
             </div>
-
-            <div className="container" id="logInDriver">
-                <h2>Log in as a driver</h2>
-                <form id="formDriver">
-                <div className="form-group">
-                        <label htmlFor="email">Email:</label>
-                        <input type="email" className="form-control" id="emailDriver" placeholder="Enter email" name="email" onChange={this.onEmailChangeForDriver}/>
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="pwd">Password:</label>
-                        <input type="password" className="form-control" id="pwdDriver" placeholder="Enter password" name="pwd" onChange={this.onPasswordChangeForDriver}/>
-                    </div>
-
-                    <button type="button" onClick={this.handleSubmitForDriver} className="btn btn-success">Log In</button>
-                </form>
-            </div>
-
         </div>
     );
   }

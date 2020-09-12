@@ -15,18 +15,27 @@ class Header extends React.Component {
             <div className="NB_css">
                 <ul>
                     <li>
-                        <a href="/"> POČETNA </a>
+                        <a href="/"> USLUGE </a>
                     </li>
                     <li>
-                        <a href="/#"> O NAMA </a> 
+                        <a href="/"> GRADOVI </a>
                     </li>
                     <li>
-                        <a href="/#"> PONUDA </a>
+                        <a href="/#oNama"> O NAMA </a> 
+                    </li>
+                    <li>
+                        <a href="/#ponuda"> KONTAKT </a>
                     </li>
                     <li>
                         <a href="/#"> TIM </a>
                     </li>
                 </ul>
+                
+
+            </div>
+            <div className="buttonsHeader">
+                <button className="btnLogIn"><a href="/login"> <span className="textBtn">Prijavite se</span> </a></button>
+                <button className="btnSignIn"> <a href="/register">  <span className="textBtn">Registrujte se </span></a></button>
             </div>
       </div>
       );

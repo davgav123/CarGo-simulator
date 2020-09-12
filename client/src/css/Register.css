@@ -1,10 +1,59 @@
-.container {
-    margin-top: 5%;
+.signin {
+    display: flex;
+    position: relative;
 }
 
-.buttons {
+.back {
+    margin-top: 10%;
+}
+.formular a{
+    color: black;
+}
+
+.formular a:visited {
+    color: black;
+    text-decoration: none;
+
+  }
+  
+  /* mouse over link */
+.formular a:hover {
+    color: black;
+    text-decoration: none;
+
+  }
+  
+  /* selected link */
+.formular a:active {
+    color: black;
+    text-decoration: none;
+
+}
+
+.container {
     margin-top: 5%;
-    margin-left: 40%;
+    padding-left: 0%;
+}
+.slider{
+    width: 45%;
+    position: fixed;
+}
+
+.formular {
+    display: block;
+    margin-left: 60%;
+    margin-top: 2%;
+
+}
+
+.titleForm {
+    margin-top: 25%;
+    margin-bottom: 10%;
+}
+
+.buttonsReg {
+    margin-top: 10%;
+    margin-left: 30%;
     display: flex;
 }
 
@@ -14,4 +63,37 @@
 
 #btnSignInDriver {
     margin-left: 2%;
+    background-color: rgb(7, 62, 82);
+}
+
+#btnSignInUser {
+    background-color: rgb(7, 62, 82);
+}
+
+#submit {
+    background-color: rgb(7, 62, 82);
+}
+
+#submitDriver {
+    background-color: rgb(7, 62, 82);
+}
+
+.goToLogin {
+    margin-top: 5%;
+    margin-bottom: 10%;
+}
+
+@media (max-width: 600px){
+    .slider {
+        display: none;
+    }
+
+    .formular {
+        margin-left: 2%;
+    }
+
+    .buttonsReg {
+        margin-left: 25%;
+    }
+
 }
