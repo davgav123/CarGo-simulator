@@ -1,0 +1,63 @@
+html,body{
+    overflow:auto;
+}
+
+.mapForOrder {
+    display: block;
+    padding-bottom: 10%;
+    padding-top: 140px;
+}
+
+.map {
+    margin-left: 5%;
+    width: 90%;
+    margin-bottom: 20px;
+}
+
+.order {
+    display: flex;
+    margin-left: 5%;
+    margin-bottom: 30px;
+}
+
+#addressStart {
+    width: 13%;
+}
+#labelStart {
+    margin-top: 7px;
+    margin-right: 2%;
+}
+
+#addressEnd {
+    width: 13%;
+}
+#labelEnd {
+    margin-top: 7px;
+    margin-right: 2%;
+    margin-left: 4%;
+}
+
+#selectCity {
+    width: 13%;
+    margin-left: 2%;
+}
+
+#submitOrderDrive {
+    background-color: rgb(7, 62, 82);
+    margin-left: 2%;
+}
+
+#dialog {
+    display: none;
+}
+
+#rating {
+    color: #ffb400;
+    display: block;
+    position: relative;
+    font-size: 3.5rem;
+    text-align: center;
+}
+#alert-dialog-title{
+    text-align: center;
+}

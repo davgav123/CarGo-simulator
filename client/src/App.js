@@ -7,6 +7,7 @@ import Login from './components/Login';
 import ForgotPassword from './components/ForgotPassword';
 import ResetPassword from './components/ResetPassword';
 import Profile from './components/Profile';
+import OrderDrive from './components/OrderDrive';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/forgotPassword" exact component={ForgotPassword} />
         <Route path="/resetPassword" exact component={ResetPassword} /> 
         <Route path="/profil" exact component={Profile} /> 
+        <Route path="/narucivanjeVoznje" exact component={OrderDrive} /> 
 
       </Switch>
     </BrowserRouter>
