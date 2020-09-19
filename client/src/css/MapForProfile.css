@@ -1,0 +1,98 @@
+.myRides {
+    display: flex;
+}
+
+.mapForProfile {
+    display: block;
+    padding-bottom: 10%;
+}
+
+.map {
+    margin-left: 5%;
+    width: 90%;
+}
+
+.options {
+    display: flex;
+    width: 95%;
+    margin-top: 40px;
+    margin-bottom: 30px;
+    /* justify-content: center; */
+    margin-left: 5%;
+
+}
+
+.dateOfDrive {
+    /* justify-content: center; */
+    display: flex;
+}
+
+#showRides {
+    background-color: rgb(7, 62, 82);
+    width: 190px;
+    margin-left: 3%;
+}
+
+#selectDriving {
+    width: 205px;
+    margin-left: 7%;
+}
+
+#showAllRides {
+    margin-left: 3%;
+    background-color: rgb(7, 62, 82);
+    width: 190px;
+
+}
+
+#infoForDrive {
+    display: none;
+}
+
+.infoForDrive {
+    margin-top: 50px;
+    margin-left: 5%;
+
+}
+
+.infoForDrive h2 {
+    text-align: center;
+}
+
+.titleMyDriving {
+    text-align: center;
+    margin-top: 10px;
+
+}
+
+.table-responsive {
+    width: 95%;
+}
+
+.react-datepicker__input-container input{
+    height: 37px;
+    margin-top: 1px;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    /* padding: .375rem 1.75rem .375rem .75rem; */
+    font-size: 1rem;
+    color: #495057;
+
+}
+
+@media (max-width: 600px){
+    .mapForProfile {
+        display: block;
+    }
+
+    .options {
+        display: block;
+        width: 100%;
+    }
+    .map {
+        width: 100%;
+    }
+    
+
+}
