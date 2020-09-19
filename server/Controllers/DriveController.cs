@@ -383,7 +383,7 @@ namespace CarGoSimulator.Controllers
 
             var drive = await drivesRepository.GetFirstByConditionAsync(d => d.CustomerRequestId == lastRequest.Id);
 
-            if (drive == null || drive.Status != Drive.DriveStatus.Closed)
+            if (drive == null)
                 return NotFound(ErrorEnum.InvalidDriveRating);
 
             if (drive.Rating != null)

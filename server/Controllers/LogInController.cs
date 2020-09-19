@@ -68,7 +68,7 @@ namespace CarGoSimulator.Controllers
 
             if (!await userManager.CheckPasswordAsync(user, model.Password))
             {
-                await mailService.SendEmailAsync(email, "Unsuccessful Login - CallAndGo", "Unsuccessful login at " + DateTime.Now + ".");
+                await mailService.SendEmailAsync(email, "Neuspešno Prijavljivanje - CallAndGo", "Neuspešno prijavljivanje na Vaš nalog - " + DateTime.Now + ".");
                 return BadRequest(ErrorEnum.InvalidPassword);
             }
 
@@ -97,7 +97,7 @@ namespace CarGoSimulator.Controllers
 
             await userManager.UpdateAsync(user);
 
-            await mailService.SendEmailAsync(email, "Successful Login - CallAndGo", "Successful login at " + DateTime.Now + ".");
+            await mailService.SendEmailAsync(email, "Uspešno Prijavljivanje - CallAndGo", "Uspešno prijavljivanje na Vaš nalog - " + DateTime.Now + ".");
             return Ok(new
             {
                 AccessToken = accessToken,
@@ -133,8 +133,8 @@ namespace CarGoSimulator.Controllers
 
             var url = $"{configuration["ApplicationWebUrl"]}/ResetPassword?email={email}&token={validResetToken}";
 
-            await mailService.SendEmailAsync(email, "Reset Password - CallAndGo", "<h1>Follow the instructions to reset your password</h1>" +
-                $"<p>To reset your password <a href='{url}'>Click here</a></p>");
+            await mailService.SendEmailAsync(email, "Obnova lozinke - CallAndGo", "<h1>Pratite instrukcije da biste obnovili vašu lozinku</h1>" +
+                $"<p>Da obnovite Vašu lozinku <a href='{url}'>Kliknite ovde</a></p>.");
 
             user.PasswordResetBlockTime = timeNow.AddMinutes(5.0);
 

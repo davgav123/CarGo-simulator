@@ -125,8 +125,8 @@ namespace CarGoSimulator.Controllers
             var url = $"{configuration["ApplicationApiUrl"]}/api/auth/confirmemail?userid={user.Id}&token={validEmailToken}";
 
             var email = user.Email;
-            await mailService.SendEmailAsync(email, "Email confirmation - CallAndGo", $"<h1>Welcome to CallAndGo community</h1>" +
-                                $"<p>Please confirm your email by <a href='{url}'>Clicking here </a></p>");
+            await mailService.SendEmailAsync(email, "Imejl potvrda - CallAndGo", $"<h1>Dobrodošli u CallAndGo zajednicu</h1>" +
+                                $"<p>Molimo Vas, potvrdite Vašu imejl adresu tako što <a href='{url}'>Kliknete ovde </a></p>.");
         }
     }
 }

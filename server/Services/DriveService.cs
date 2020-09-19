@@ -88,15 +88,15 @@ namespace CarGoSimulator.Services
 
         private async Task ForeverHandleRequests()
         {
-            var pendingDriversRequests = new Dictionary<string, ConcurrentDictionary<string, LinkedList<DriveRequest>>>();
+            var pendingDriversRequests = new Dictionary<string, Dictionary<string, LinkedList<DriveRequest>>>();
 
-            var localitySubLocalityLocks = new Dictionary<string, ConcurrentDictionary<string, SemaphoreSlim>>();
+            var localitySubLocalityLocks = new Dictionary<string, Dictionary<string, SemaphoreSlim>>();
 
             foreach (var supportedCity in SupportedZones.supportedCities)
             {
-                pendingDriversRequests.Add(supportedCity, new ConcurrentDictionary<string, LinkedList<DriveRequest>>());
+                pendingDriversRequests.Add(supportedCity, new Dictionary<string, LinkedList<DriveRequest>>());
 
-                localitySubLocalityLocks.Add(supportedCity, new ConcurrentDictionary<string, SemaphoreSlim>());
+                localitySubLocalityLocks.Add(supportedCity, new Dictionary<string, SemaphoreSlim>());
             }
 
             while (true)
@@ -107,8 +107,8 @@ namespace CarGoSimulator.Services
             }
         }
 
-        private async Task RespondToRequest(Dictionary<string, ConcurrentDictionary<string, LinkedList<DriveRequest>>> pendingDriversRequests,
-            Dictionary<string, ConcurrentDictionary<string, SemaphoreSlim>> localitySubLocalityLocks)
+        private async Task RespondToRequest(Dictionary<string, Dictionary<string, LinkedList<DriveRequest>>> pendingDriversRequests,
+            Dictionary<string, Dictionary<string, SemaphoreSlim>> localitySubLocalityLocks)
         {
             userRequests.TryDequeue(out var userRequestTypePair);
 
@@ -122,8 +122,12 @@ namespace CarGoSimulator.Services
 
             var subLocalityLocks = localitySubLocalityLocks[userRequest.Locality];
 
-            SemaphoreSlim subLocalityLock = new SemaphoreSlim(1, 1);
-            subLocalityLock = subLocalityLocks.GetOrAdd(userRequest.SubLocality, subLocalityLock);
+            if(!subLocalityLocks.TryGetValue(userRequest.SubLocality, out var subLocalityLock))
+            {
+                subLocalityLock = new SemaphoreSlim(1, 1);
+
+                subLocalityLocks.Add(userRequest.SubLocality, subLocalityLock);
+            }
 
             try
             {
@@ -143,7 +147,7 @@ namespace CarGoSimulator.Services
             }
         }
 
-        private void PutDriver(Dictionary<string, ConcurrentDictionary<string, LinkedList<DriveRequest>>> pendingDriversRequests, DriveRequest driverRequest)
+        private void PutDriver(Dictionary<string, Dictionary<string, LinkedList<DriveRequest>>> pendingDriversRequests, DriveRequest driverRequest)
         {
             var subLocalityRequestLists = pendingDriversRequests[driverRequest.Locality];
 
@@ -159,7 +163,7 @@ namespace CarGoSimulator.Services
             }
         }
 
-        private async Task ServeCustomerAsync(Dictionary<string, ConcurrentDictionary<string, 
+        private async Task ServeCustomerAsync(Dictionary<string, Dictionary<string, 
             LinkedList<DriveRequest>>> pendingDriversRequests, DriveRequest customerRequest, Directions directions)
         {
             if (!pendingDriversRequests[customerRequest.Locality].TryGetValue(customerRequest.SubLocality, out var subLocalityRequests))
@@ -207,6 +211,8 @@ namespace CarGoSimulator.Services
                 if (directionsRoot.status != "OK")
                     continue;
 
+                var firstDirections = mapper.Map<Directions>(directionsRoot);
+
                 var customerRequestId = customerRequest.Id;
                 if (!cancellationLocks.TryGetValue(customerRequestId, out var customerCancellationLock))
                     return;
@@ -229,8 +235,6 @@ namespace CarGoSimulator.Services
 
                         if (!userResponses.ContainsKey(driverRequestId))
                             continue;
-
-                        var firstDirections = mapper.Map<Directions>(directionsRoot);
 
                         var result = new Drive
                         {
