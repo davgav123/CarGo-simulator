@@ -1,25 +1,26 @@
 .ImgOnHomepage{
     width: 100%;
-    margin: -50px 0 95px 0;
-}
-
-.ImgOnHomepage img{
-    width: 100%;
-    margin-top: -1%;
+    height: 100vh;
+    margin: -50px 0 0 0;
 }
 
 .btnLogIn {
-    position: absolute;
-    margin: 30% 0 0 -54.5%;
-    padding: 5px 35px;
-    border: 2px solid white;
+    /* padding: 5px 20px; */
+    border: none;
     color: white;
     background-color: transparent;
-    font-size: 25px;
+    border-right: 2px solid white;
+    padding-right: 28px;
+    font-size: 20px;
+    margin-top: 14px;
+
+
 }
 
 .textBtn {
     color: white;
+    font-size: 20px;
+    /* text-transform: uppercase; */
 }
 
 a:link {
@@ -50,11 +51,60 @@ a:link {
   }
 
 .btnSignIn {
-    position: absolute;
-    margin: 35% 0 0 -55%;
-    padding: 5px 35px;
-    border: 2px solid white;
+    margin-left: 20px;
+    /* padding: 5px 20px; */
+    border: none;
     color: white;
     background-color: transparent;
-    font-size: 25px;
+    font-size: 20px;
+    margin-top: 14px;
+}
+
+.text{
+  background-color: rgb(7, 62, 82, 0);
+  color: white;
+  position: absolute;
+  text-align: center;
+  top: 30%;
+  width: 100%;
+}
+
+#titleCarGo {
+  font-size: 100px;
+  font-weight: bold;
+  margin-top: -70px;
+
+}
+
+@media (max-width: 1160px){
+  .text {
+    margin-top: 160px;
+  }
+}
+
+@media (max-width: 950px){
+  #titleCarGo {
+    font-size: 70px;
+    margin-top: 210px;
+
+
+  }
+}
+
+@media (max-width: 900px){
+  #titleCarGo {
+    font-size: 60px;
+    margin-top: 210px;
+  }
+  .text {
+    top: 15%
+  }
+}
+
+@media (max-width: 500px){
+  #titleCarGo {
+    font-size: 60px;
+    margin-top: 0px;
+  }
+
 }

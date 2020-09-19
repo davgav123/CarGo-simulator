@@ -90,9 +90,9 @@ export default class login extends Component {
 
                         <button type="button" onClick={this.handleSubmitForUser} id="submitLogin" className="btn btn-success">Prijavite se</button>
                         <div className="goToForgotPassword"> 
-                            <a href="/forgotPassword">Zaboravili ste šifru?</a>
+                            <a href="/zaboravljenaSifra">Zaboravili ste šifru?</a>
                         </div>
-                        <p className="goToLogin">Nemate svoj nalog? <a href='/register'>Kreirajte ga!</a></p>
+                        <p className="goToLogin">Nemate svoj nalog? <a href='/registracija'>Kreirajte ga!</a></p>
                     </form>
                 </div>
             </div>

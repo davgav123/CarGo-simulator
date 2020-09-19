@@ -463,7 +463,7 @@ class Register extends Component {
                             </div>
 
                             <button type="button" onClick={this.handleSubmitForUser} id="submit" className="btn btn-success">Kreirajte nalog</button>
-                            <p className="goToLogin">Već imate nalog? <a href='/login'>Prijavite se!</a></p>
+                            <p className="goToLogin">Već imate nalog? <a href='/prijavljivanje'>Prijavite se!</a></p>
                         </form>
                     </div>
 

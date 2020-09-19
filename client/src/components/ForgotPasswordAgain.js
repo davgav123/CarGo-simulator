@@ -3,17 +3,17 @@ import '../css/ForgotPassword.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 
-export default class ForgotPassword extends Component {
+export default class ForgotPasswordAgain extends Component {
     constructor(props) {
         super(props);
         this.state = {
-          forUser: {
-              email: ''
-          }
-      };
+            forUser: {
+                email: ''
+            }
+        };
 
-      this.onEmailChange = this.onEmailChange.bind(this);
-      this.handleSubmit = this.handleSubmit.bind(this);
+        this.onEmailChange = this.onEmailChange.bind(this);
+         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     checkValidityOfEmail(entity) {
@@ -57,11 +57,11 @@ export default class ForgotPassword extends Component {
             </div>
             <div className="formular">
 
-                <a href='/prijavljivanje' className="back"><FontAwesomeIcon icon={faAngleLeft} className="fi_menu"/> Vratite se na prijavu</a>
+                <a href='/login' className="back"><FontAwesomeIcon icon={faAngleLeft} className="fi_menu"/> Vratite se na prijavu</a>
                 <div className="container">
 
                     <h2 className="titleFormForgotPassword">Promenite šifru</h2>
-                        <p>Da biste promenili šifru potrebno je da unesete email sa kojim ste napravili nalog </p>
+                        <p>Ukoliko vam je mejl koji vam je poslat istekao, ponovo unesite email sa kojim ste napravili nalog </p>
                 
                     <form id="formUser">
                         <div className="form-group">
@@ -69,8 +69,8 @@ export default class ForgotPassword extends Component {
                             <input type="email" className="form-control" id="emailUser" placeholder="Unesite email" name="email" onChange={this.onEmailChangeForUser}/>
                         </div>
 
-                        <button type="button" onClick={this.handleSubmit} id="submitLogin" className="btn btn-success">Potvrdite</button>
-                        <p className="goToLogin">Nemate svoj nalog? <a href='/registracija'>Kreirajte ga!</a></p>
+                        <button type="button" onClick={this.handleSubmit} id="submitLogin" className="btn btn-success">Potvrdite ponovo</button>
+                        <p className="goToLogin">Nemate svoj nalog? <a href='/register'>Kreirajte ga!</a></p>
                     </form>
                 </div>
             </div>

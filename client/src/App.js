@@ -5,6 +5,7 @@ import Homepage from './components/Homepage';
 import Register from './components/Register';
 import Login from './components/Login';
 import ForgotPassword from './components/ForgotPassword';
+import ForgotPasswordAgain from './components/ForgotPasswordAgain';
 import ResetPassword from './components/ResetPassword';
 import Profile from './components/Profile';
 import OrderDrive from './components/OrderDrive';
@@ -14,9 +15,10 @@ function App() {
     <BrowserRouter>
       <Switch>
         <Route path="/" exact component={Homepage} />
-        <Route path="/register" exact component={Register} />
-        <Route path="/login" exact component={Login} />
-        <Route path="/forgotPassword" exact component={ForgotPassword} />
+        <Route path="/registracija" exact component={Register} />
+        <Route path="/prijavljivanje" exact component={Login} />  
+        <Route path="/zaboravljenaSifra" exact component={ForgotPassword} />
+        <Route path="/forgotPasswordAgain" exact component={ForgotPasswordAgain} />     
         <Route path="/resetPassword" exact component={ResetPassword} /> 
         <Route path="/profil" exact component={Profile} /> 
         <Route path="/narucivanjeVoznje" exact component={OrderDrive} /> 
