@@ -19,11 +19,13 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
 
 namespace CarGoSimulator.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("MyPolicy")]
     public class DriveController : ControllerBase
     {
         private readonly IConfiguration configuration;

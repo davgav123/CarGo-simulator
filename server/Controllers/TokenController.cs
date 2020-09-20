@@ -11,11 +11,13 @@ using CarGoSimulator.Models.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Cors;
 
 namespace CarGoSimulator.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [ApiController]    
+    [EnableCors("MyPolicy")]
     public class TokenController : ControllerBase
     {
         readonly UserManager<ApplicationUser> userManager;

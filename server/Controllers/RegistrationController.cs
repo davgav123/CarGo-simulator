@@ -15,11 +15,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Cors;
 
 namespace CarGoSimulator.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("MyPolicy")]
     public class RegistrationController : ControllerBase
     {
         private readonly IUserRepositoryManager<Customer> customerRepositoryManager;
@@ -122,8 +124,9 @@ namespace CarGoSimulator.Controllers
 
             var validEmailToken = WebEncoders.Base64UrlEncode(encodedEmailToken);
 
-            var url = $"{configuration["ApplicationApiUrl"]}/api/auth/confirmemail?userid={user.Id}&token={validEmailToken}";
-
+            // var url = $"{configuration["ApplicationApiUrl"]}/api/auth/confirmemail?userid={user.Id}&token={validEmailToken}";
+            var url = $"http://localhost:3000/prijavljivanjePrvo/{user.Id}/{validEmailToken}";
+            // var url = $"localhost:3000/prijavljivanjePrvo/{user.Id}/{validEmailToken}";
             var email = user.Email;
             await mailService.SendEmailAsync(email, "Imejl potvrda - CallAndGo", $"<h1>Dobrodošli u CallAndGo zajednicu</h1>" +
                                 $"<p>Molimo Vas, potvrdite Vašu imejl adresu tako što <a href='{url}'>Kliknete ovde </a></p>.");
