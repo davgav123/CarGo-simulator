@@ -22,6 +22,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Cors;
 
 namespace CarGoSimulator
 {
@@ -94,6 +95,14 @@ namespace CarGoSimulator
             services.AddSingleton<IUrlService, UrlService>();
 
             services.AddSingleton<IDriveService, DriveService>();
+
+            // services.AddCors();
+                services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+                {
+                    builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                }));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider, 
@@ -109,7 +118,9 @@ namespace CarGoSimulator
             app.UseAuthentication();
 
             app.UseAuthorization();
-
+            app.UseCors(builder => 
+                builder.WithOrigins("http://localhost:49943")
+            );
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

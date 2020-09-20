@@ -17,11 +17,13 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
 
 namespace CarGoSimulator.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("MyPolicy")]
     public class LogInController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> userManager;

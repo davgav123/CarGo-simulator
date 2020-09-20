@@ -12,11 +12,13 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
 
 namespace CarGoSimulator.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("MyPolicy")]
     public class AuthController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> userManager;
