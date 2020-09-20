@@ -3,30 +3,33 @@ import '../css/Register.css';
 import Slideshow from './Slideshow';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
+import axios from 'axios';
 
 class Register extends Component {
     constructor(props) {
         super(props);
         this.state = {
             forUser: {
-                email: '',
-                firstName: '',
-                lastName: '',
-                password: '',
-                confirmPassword: ''
+                Email: '',
+                FirstName: '',
+                LastName: '',
+                PhoneNumber: '',
+                Password: '',
+                ConfirmPassword: ''
             },
             forDriver: {
-                email: '',
-                firstName: '',
-                lastName: '',
-                personalId: '', 
-                city: '', 
-                phoneNumber: '',
-                vehicleId: '',
-                vehicleModel: '',
-                address: '',
-                password: '',
-                confirmPassword: ''
+                Email: '',
+                FirstName: '',
+                LastName: '',
+                RealId: '', 
+                City: '', 
+                PhoneNumber: '',
+                VehiclePlateId: '',
+                VehicleModel: '',
+                Address: '',
+                Password: '',
+                ConfirmPassword: '',
+                DateOfBirth: ''
             },
             disabledUser: true,
             disabledDriver: false
@@ -42,28 +45,42 @@ class Register extends Component {
         this.onEmailChangeForDriver = this.onEmailChangeForDriver.bind(this);
         this.onPasswordChangeForDriver = this.onPasswordChangeForDriver.bind(this);
         this.onPasswordConfirmChangeForDriver = this.onPasswordConfirmChangeForDriver.bind(this);
+        this.onDateOfBirthChange = this.onDateOfBirthChange.bind(this);
+
+        this.onRealIdChange = this.onRealIdChange.bind(this);
+        this.onCityChange = this.onCityChange.bind(this);
+        this.onPhoneNumberChange = this.onPhoneNumberChange.bind(this);
+        this.onAddressChange = this.onAddressChange.bind(this);
+        
+        this.onVehicleModelChange = this.onVehicleModelChange.bind(this);
+        this.onVehiclePlateIdChange = this.onVehiclePlateIdChange.bind(this);
+         
+
         this.handleSubmitForDriver = this.handleSubmitForDriver.bind(this);
     }
     
     checkFormValidity(entity) {
         const validationEmailRegex = new RegExp("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$");
-        const validationNameRegex = new RegExp("[a-zA-Z]+");
+        const validationNameRegex = new RegExp("[A-Za-z]+");
         const validationPasswordRegex = new RegExp("^(?=.*\\d).{4,12}$");
 
-        if (entity.email === '' || !validationEmailRegex.test(entity.email)) {
-            window.alert("Please insert valid email!");
+        if (entity.Email === '' || !validationEmailRegex.test(entity.Email)) {
+            window.alert("Please insert valid Email!");
             return false;
-        } else if (entity.name === '' || !validationNameRegex.test(entity.name)) {
+        } else if (entity.Name === '' || !validationNameRegex.test(entity.Name)) {
             window.alert("Name must contain only letters!");
             return false;
-        } else if (entity.lastName === '' || !validationNameRegex.test(entity.lastName)) {
+        } else if (entity.LastName === '' || !validationNameRegex.test(entity.LastName)) {
             window.alert("Last name must contain only letters!");
             return false;
-        } else if (entity.password === '' || !validationPasswordRegex.test(entity.password)) {
+        } else if (entity.Password === '' || !validationPasswordRegex.test(entity.Password)) {
             window.alert("Password must contain between 4-12 characters and at least one digit!");
             return false;
-        } else if (entity.password !== entity.confirmPassword) {
+        } else if (entity.Password !== entity.ConfirmPassword) {
             window.alert("Passwords do not match!");
+            return false;
+        } else if (entity.PhoneNumber === '') {
+            window.alert("PhoneNumber is empty!");
             return false;
         }
 
@@ -71,25 +88,25 @@ class Register extends Component {
     }
 
     checkFormValidityForDriver(entity) {
-        const validationPersonalIdRegex = new RegExp("[0-9]{13}");
-        const validationAddressRegex = new RegExp("[A-Za-z ]+\\s*[0-9]+[,]\\s*[0-9]{5}\\s*[A-Za-z]+");
-        const validationVehicleIdRegex = new RegExp("[A-Z]{2}[0-9]{4}[A-Z]{2}");
+        const validationRealIdRegex = new RegExp("[0-9]{13}");
+        const validationAddressRegex = new RegExp("[A-Za-z ]+\\s*[0-9]+");
+        const validationVehiclePlateIdRegex = new RegExp("[A-Z]{2}[0-9]{4}[A-Z]{2}");
         const validationVehicleModelRegex = new RegExp("[A-Za-z ]+");
         const validationPhoneNumberRegex = new RegExp("[0-9]{10}");
         
-        if (entity.personalId === '' || !validationPersonalIdRegex.test(entity.personalId)) {
+        if (entity.RealId === '' || !validationRealIdRegex.test(entity.RealId)) {
             window.alert("Please insert valid personal id!");
             return false;
-        } else if (entity.address === '' || !validationAddressRegex.test(entity.address)) {
+        } else if (entity.Address === '' || !validationAddressRegex.test(entity.Address)) {
             window.alert("Please insert valid address!");
             return false;
-        } else if (entity.phoneNumber === '' || !validationPhoneNumberRegex.test(entity.phoneNumber)) {
+        } else if (entity.PhoneNumber === '' || !validationPhoneNumberRegex.test(entity.PhoneNumber)) {
             window.alert("Please insert valid phone number!");
             return false;
-        } else if (entity.vehicleId === '' || !validationVehicleIdRegex.test(entity.vehicleId)) {
+        } else if (entity.VehiclePlateId === '' || !validationVehiclePlateIdRegex.test(entity.VehiclePlateId)) {
             window.alert("Please insert valid vehicle id!");
             return false;
-        } else if (entity.vehicleModel === '' || !validationVehicleModelRegex.test(entity.vehicleModel)) {
+        } else if (entity.VehicleModel === '' || !validationVehicleModelRegex.test(entity.VehicleModel)) {
             window.alert("Please insert valid vehicle model!");
             return false;
         }
@@ -106,11 +123,11 @@ class Register extends Component {
             disabledUser: true,
             disabledDriver: false,
             forUser: {
-                email: '',
-                firstName: '',
-                lastName: '',
-                password: '',
-                confirmPassword: ''
+                Email: '',
+                FirstName: '',
+                LastName: '',
+                Password: '',
+                ConfirmPassword: ''
             }
         });
         document.getElementById("formDriver").reset();
@@ -129,32 +146,33 @@ class Register extends Component {
         document.getElementById("formUser").reset();
     }
 
-    onEmailChangeForUser(email) {
+    onEmailChangeForUser(Email) {
         const forUser = {
-            email: email.target.value,
-            firstName: this.state.forUser.firstName,
-            lastName: this.state.forUser.lastName,
-            password: this.state.forUser.password,
-            confirmPassword: this.state.forUser.confirmPassword
+            Email: Email.target.value,
+            FirstName: this.state.forUser.FirstName,
+            LastName: this.state.forUser.LastName,
+            Password: this.state.forUser.Password,
+            ConfirmPassword: this.state.forUser.confirmPassword
         }
         this.setState({
             forUser
         });
     }
 
-    onEmailChangeForDriver(email) {
+    onEmailChangeForDriver(Email) {
         const forDriver = {
-            email: email.target.value,
-            firstName: this.state.forDriver.firstName,
-            lastName: this.state.forDriver.lastName,
-            personalId: this.state.forDriver.personalId,
-            city: this.state.forDriver.city,
-            address: this.state.forDriver.address,
-            phoneNumber: this.state.forDriver.phoneNumber,
-            vehicleId: this.state.forDriver.vehicleId,
-            vehicleModel: this.state.forDriver.vehicleModel,
-            password: this.state.forDriver.password,
-            confirmPassword: this.state.forDriver.confirmPassword
+            Email: Email.target.value,
+            FirstName: this.state.forDriver.FirstName,
+            LastName: this.state.forDriver.LastName,
+            RealId: this.state.forDriver.RealId,
+            DateOfBirth: this.state.forDriver.DateOfBirth,
+            City: this.state.forDriver.City,
+            Address: this.state.forDriver.Address,
+            PhoneNumber: this.state.forDriver.PhoneNumber,
+            VehiclePlateId: this.state.forDriver.VehiclePlateId,
+            VehicleModel: this.state.forDriver.VehicleModel,
+            Password: this.state.forDriver.Password,
+            ConfirmPassword: this.state.forDriver.ConfirmPassword
         }
         this.setState({
             forDriver
@@ -162,23 +180,30 @@ class Register extends Component {
     }
 
     onNameChangeForUser(nameOfInput, input) {
-        let firstName;
-        let lastName;
-
-        if (nameOfInput === "name") {
-            firstName = input.target.value;
-            lastName = this.state.forUser.lastName;
-        } else if (nameOfInput === "lastName") {
-            firstName = this.state.forUser.firstName;
-            lastName = input.target.value;
+        let FirstName;
+        let LastName;
+        let PhoneNumber;
+        if (nameOfInput === "Name") {
+            FirstName = input.target.value;
+            LastName = this.state.forUser.LastName;
+            PhoneNumber = this.state.forUser.PhoneNumber;
+        } else if (nameOfInput === "LastName") {
+            FirstName = this.state.forUser.FirstName;
+            LastName = input.target.value;
+            PhoneNumber = this.state.forUser.PhoneNumber;
+        } else if (nameOfInput === "PhoneNumber") {
+            FirstName = this.state.forUser.FirstName;
+            LastName =  this.state.forUser.LastName;
+            PhoneNumber = input.target.value;
         }
-
+        
         const forUser = {
-            email: this.state.forUser.email,
-            firstName,
-            lastName,
-            password: this.state.forUser.password,
-            confirmPassword: this.state.forUser.confirmPassword
+            Email: this.state.forUser.Email,
+            FirstName: FirstName,
+            LastName: LastName,
+            PhoneNumber: PhoneNumber,
+            Password: this.state.forUser.Password,
+            ConfirmPassword: this.state.forUser.ConfirmPassword
         };
 
         this.setState({
@@ -187,29 +212,29 @@ class Register extends Component {
     }
 
     onNameChangeForDriver(nameOfInput, input) {
-        let firstName;
-        let lastName;
-
-        if (nameOfInput === "name") {
-            firstName = input.target.value;
-            lastName = this.state.forDriver.lastName;
-        } else if (nameOfInput === "lastName") {
-            firstName = this.state.forDriver.firstName;
-            lastName = input.target.value;
-        }
+        let FirstName;
+        let LastName;
+        if (nameOfInput === "Name") {
+            FirstName = input.target.value;
+            LastName = this.state.forDriver.LastName;
+        } else if (nameOfInput === "LastName") {
+            FirstName = this.state.forDriver.FirstName;
+            LastName = input.target.value;
+        } 
 
         const forDriver = {
-            email: this.state.forDriver.email,
-            firstName,
-            lastName,
-            personalId: this.state.forDriver.personalId,
-            city: this.state.forDriver.city,
-            address: this.state.forDriver.address,
-            phoneNumber: this.state.forDriver.phoneNumber,
-            vehicleId: this.state.forDriver.vehicleId,
-            vehicleModel: this.state.forDriver.vehicleModel,
-            password: this.state.forDriver.password,
-            confirmPassword: this.state.forDriver.confirmPassword
+            Email: this.state.forDriver.Email,
+            FirstName,
+            LastName,
+            PhoneNumber: this.state.forDriver.PhoneNumber,
+            RealId: this.state.forDriver.RealId,
+            DateOfBirth: this.state.forDriver.DateOfBirth,
+            City: this.state.forDriver.City,
+            Address: this.state.forDriver.Address,
+            VehiclePlateId: this.state.forDriver.VehiclePlateId,
+            VehicleModel: this.state.forDriver.VehicleModel,
+            Password: this.state.forDriver.Password,
+            ConfirmPassword: this.state.forDriver.ConfirmPassword
         };
 
         this.setState({
@@ -217,179 +242,209 @@ class Register extends Component {
         });
     }
 
-    onPasswordChangeForUser(password) {
+    onPasswordChangeForUser(Password) {
         const forUser = {
-            email: this.state.forUser.email,
-            firstName: this.state.forUser.firstName,
-            lastName: this.state.forUser.lastName,
-            password: password.target.value,
-            confirmPassword: this.state.forUser.confirmPassword
+            Email: this.state.forUser.Email,
+            FirstName: this.state.forUser.FirstName,
+            LastName: this.state.forUser.LastName,
+            PhoneNumber: this.state.forUser.PhoneNumber,
+            Password: Password.target.value,
+            ConfirmPassword: this.state.forUser.ConfirmPassword
         };
         this.setState({
             forUser
         });
     }
 
-    onPasswordChangeForDriver(password) {
+    onPasswordChangeForDriver(Password) {
         const forDriver = {
-            email: this.state.forDriver.email,
-            firstName: this.state.forDriver.firstName,
-            lastName: this.state.forDriver.lastName,
-            personalId: this.state.forDriver.personalId,
-            city: this.state.forDriver.city,
-            address: this.state.forDriver.address,
-            phoneNumber: this.state.forDriver.phoneNumber,
-            vehicleId: this.state.forDriver.vehicleId,
-            vehicleModel: this.state.forDriver.vehicleModel,
-            password: password.target.value,
-            confirmPassword: this.state.forDriver.confirmPassword
+            Email: this.state.forDriver.Email,
+            FirstName: this.state.forDriver.FirstName,
+            LastName: this.state.forDriver.LastName,
+            RealId: this.state.forDriver.RealId,
+            DateOfBirth: this.state.forDriver.DateOfBirth,
+            City: this.state.forDriver.City,
+            Address: this.state.forDriver.Address,
+            PhoneNumber: this.state.forDriver.PhoneNumber,
+            VehiclePlateId: this.state.forDriver.VehiclePlateId,
+            VehicleModel: this.state.forDriver.VehicleModel,
+            Password: Password.target.value,
+            ConfirmPassword: this.state.forDriver.ConfirmPassword
         };
         this.setState({
             forDriver
         });
     }
 
-    onPasswordConfirmChangeForUser(passwordConfirm) {
+    onPasswordConfirmChangeForUser(PasswordConfirm) {
         const forUser = {
-            email: this.state.forUser.email,
-            firstName: this.state.forUser.firstName,
-            lastName: this.state.forUser.lastName,
-            password: this.state.forUser.password,
-            confirmPassword: passwordConfirm.target.value
+            Email: this.state.forUser.Email,
+            FirstName: this.state.forUser.FirstName,
+            LastName: this.state.forUser.LastName,
+            PhoneNumber: this.state.forUser.PhoneNumber,
+            Password: this.state.forUser.Password,
+            ConfirmPassword: PasswordConfirm.target.value
         };
         this.setState({
             forUser
         });
     }
 
-    onPasswordConfirmChangeForDriver(passwordConfirm) {
+    onPasswordConfirmChangeForDriver(PasswordConfirm) {
         const forDriver = {
-            email: this.state.forDriver.email,
-            firstName: this.state.forDriver.firstName,
-            lastName: this.state.forDriver.lastName,
-            personalId: this.state.forDriver.personalId,
-            city: this.state.forDriver.city,
-            address: this.state.forDriver.address,
-            phoneNumber: this.state.forDriver.phoneNumber,
-            vehicleId: this.state.forDriver.vehicleId,
-            vehicleModel: this.state.forDriver.vehicleModel,
-            password: this.state.forDriver.password,
-            confirmPassword: passwordConfirm.target.value
+            Email: this.state.forDriver.Email,
+            FirstName: this.state.forDriver.FirstName,
+            LastName: this.state.forDriver.LastName,
+            RealId: this.state.forDriver.RealId,
+            DateOfBirth: this.state.forDriver.DateOfBirth,
+            City: this.state.forDriver.City,
+            Address: this.state.forDriver.Address,
+            PhoneNumber: this.state.forDriver.PhoneNumber,
+            VehiclePlateId: this.state.forDriver.VehiclePlateId,
+            VehicleModel: this.state.forDriver.VehicleModel,
+            Password: this.state.forDriver.Password,
+            ConfirmPassword: PasswordConfirm.target.value
         };
         this.setState({
             forDriver
         });
     }
 
-    onPersonalIdChange(personalId) {
+    onRealIdChange(RealId) {
         const forDriver = {
-            email: this.state.forDriver.email,
-            firstName: this.state.forDriver.firstName,
-            lastName: this.state.forDriver.lastName,
-            personalId: personalId.target.value,
-            city: this.state.forDriver.city,
-            address: this.state.forDriver.address,
-            phoneNumber: this.state.forDriver.phoneNumber,
-            vehicleId: this.state.forDriver.vehicleId,
-            vehicleModel: this.state.forDriver.vehicleModel,
-            password: this.state.forDriver.password,
-            confirmPassword: this.state.forDriver.confirmPassword
+            Email: this.state.forDriver.Email,
+            FirstName: this.state.forDriver.FirstName,
+            LastName: this.state.forDriver.LastName,
+            RealId: RealId.target.value,
+            DateOfBirth: this.state.forDriver.DateOfBirth,
+            City: this.state.forDriver.City,
+            Address: this.state.forDriver.Address,
+            PhoneNumber: this.state.forDriver.PhoneNumber,
+            VehiclePlateId: this.state.forDriver.VehiclePlateId,
+            VehicleModel: this.state.forDriver.VehicleModel,
+            Password: this.state.forDriver.Password,
+            ConfirmPassword: this.state.forDriver.ConfirmPassword
         }
         this.setState({
             forDriver
         });
     }
 
-    onCityChange(city) {
-        console.log(city.target.value);
+    onDateOfBirthChange(DateOfBirth) {
         const forDriver = {
-            email: this.state.forDriver.email,
-            firstName: this.state.forDriver.firstName,
-            lastName: this.state.forDriver.lastName,
-            personalId: this.state.forDriver.personalId,
-            city: city.target.value,
-            address: this.state.forDriver.address,
-            phoneNumber: this.state.forDriver.phoneNumber,
-            vehicleId: this.state.forDriver.vehicleId,
-            vehicleModel: this.state.forDriver.vehicleModel,
-            password: this.state.forDriver.password,
-            confirmPassword: this.state.forDriver.confirmPassword
+            Email: this.state.forDriver.Email,
+            FirstName: this.state.forDriver.FirstName,
+            LastName: this.state.forDriver.LastName,
+            RealId: this.state.forDriver.RealId,
+            DateOfBirth: DateOfBirth.target.target,
+            City: this.state.forDriver.City,
+            Address: this.state.forDriver.Address,
+            PhoneNumber: this.state.forDriver.PhoneNumber,
+            VehiclePlateId: this.state.forDriver.VehiclePlateId,
+            VehicleModel: this.state.forDriver.VehicleModel,
+            Password: this.state.forDriver.Password,
+            ConfirmPassword: this.state.forDriver.ConfirmPassword
         }
         this.setState({
             forDriver
         });
     }
 
-    onAddressChange(address) {
+    onCityChange(City) {
+        console.log(City.target.value);
         const forDriver = {
-            email: this.state.forDriver.email,
-            firstName: this.state.forDriver.firstName,
-            lastName: this.state.forDriver.lastName,
-            personalId: this.state.forDriver.personalId,
-            city: this.state.forDriver.city,
-            address: address.target.value,
-            phoneNumber: this.state.forDriver.phoneNumber,
-            vehicleId: this.state.forDriver.vehicleId,
-            vehicleModel: this.state.forDriver.vehicleModel,
-            password: this.state.forDriver.password,
-            confirmPassword: this.state.forDriver.confirmPassword
+            Email: this.state.forDriver.Email,
+            FirstName: this.state.forDriver.FirstName,
+            LastName: this.state.forDriver.LastName,
+            RealId: this.state.forDriver.RealId,
+            DateOfBirth: this.state.forDriver.DateOfBirth,
+            City: City.target.value,
+            Address: this.state.forDriver.Address,
+            PhoneNumber: this.state.forDriver.PhoneNumber,
+            VehiclePlateId: this.state.forDriver.VehiclePlateId,
+            VehicleModel: this.state.forDriver.VehicleModel,
+            Password: this.state.forDriver.Password,
+            ConfirmPassword: this.state.forDriver.ConfirmPassword
         }
         this.setState({
             forDriver
         });
     }
 
-    onPhoneNumberChange(phoneNumber) {
+    onAddressChange(Address) {
         const forDriver = {
-            email: this.state.forDriver.email,
-            firstName: this.state.forDriver.firstName,
-            lastName: this.state.forDriver.lastName,
-            personalId: this.state.forDriver.personalId,
-            city: this.state.forDriver.city,
-            address: this.state.forDriver.address,
-            phoneNumber: phoneNumber.target.value,
-            vehicleId: this.state.forDriver.vehicleId,
-            vehicleModel: this.state.forDriver.vehicleModel,
-            password: this.state.forDriver.password,
-            confirmPassword: this.state.forDriver.confirmPassword
+            Email: this.state.forDriver.Email,
+            FirstName: this.state.forDriver.FirstName,
+            LastName: this.state.forDriver.LastName,
+            RealId: this.state.forDriver.RealId,
+            DateOfBirth: this.state.forDriver.DateOfBirth,
+            City: this.state.forDriver.City,
+            Address: Address.target.value,
+            PhoneNumber: this.state.forDriver.PhoneNumber,
+            VehiclePlateId: this.state.forDriver.VehiclePlateId,
+            VehicleModel: this.state.forDriver.VehicleModel,
+            Password: this.state.forDriver.Password,
+            ConfirmPassword: this.state.forDriver.ConfirmPassword
         }
         this.setState({
             forDriver
         });
     }
 
-    onVehicleIdChange(vehicleId) {
+    onPhoneNumberChange(PhoneNumber) {
         const forDriver = {
-            email: this.state.forDriver.email,
-            firstName: this.state.forDriver.firstName,
-            lastName: this.state.forDriver.lastName,
-            personalId: this.state.forDriver.personalId,
-            city: this.state.forDriver.city,
-            address: this.state.forDriver.address,
-            phoneNumber: this.state.forDriver.phoneNumber,
-            vehicleId: vehicleId.target.value,
-            vehicleModel: this.state.forDriver.vehicleModel,
-            password: this.state.forDriver.password,
-            confirmPassword: this.state.forDriver.confirmPassword
+            Email: this.state.forDriver.Email,
+            FirstName: this.state.forDriver.FirstName,
+            LastName: this.state.forDriver.LastName,
+            RealId: this.state.forDriver.RealId,
+            DateOfBirth: this.state.forDriver.DateOfBirth,
+            City: this.state.forDriver.City,
+            Address: this.state.forDriver.Address,
+            PhoneNumber: PhoneNumber.target.value,
+            VehiclePlateId: this.state.forDriver.VehiclePlateId,
+            VehicleModel: this.state.forDriver.VehicleModel,
+            Password: this.state.forDriver.Password,
+            ConfirmPassword: this.state.forDriver.ConfirmPassword
         }
         this.setState({
             forDriver
         });
     }
 
-    onVehicleModelChange(vehicleModel) {
+    onVehiclePlateIdChange(VehiclePlateId) {
         const forDriver = {
-            email: this.state.forDriver.email,
-            firstName: this.state.forDriver.firstName,
-            lastName: this.state.forDriver.lastName,
-            personalId: this.state.forDriver.personalId,
-            city: this.state.forDriver.city,
-            address: this.state.forDriver.address,
-            phoneNumber: this.state.forDriver.phoneNumber,
-            vehicleId: this.state.forDriver.vehicleId,
-            vehicleModel: vehicleModel.target.value,
-            password: this.state.forDriver.password,
-            confirmPassword: this.state.forDriver.confirmPassword
+            Email: this.state.forDriver.Email,
+            FirstName: this.state.forDriver.FirstName,
+            LastName: this.state.forDriver.LastName,
+            RealId: this.state.forDriver.RealId,
+            DateOfBirth: this.state.forDriver.DateOfBirth,
+            City: this.state.forDriver.City,
+            Address: this.state.forDriver.Address,
+            PhoneNumber: this.state.forDriver.PhoneNumber,
+            VehiclePlateId: VehiclePlateId.target.value,
+            VehicleModel: this.state.forDriver.VehicleModel,
+            Password: this.state.forDriver.Password,
+            ConfirmPassword: this.state.forDriver.ConfirmPassword
+        }
+        this.setState({
+            forDriver
+        });
+    }
+
+    onVehicleModelChange(VehicleModel) {
+        const forDriver = {
+            Email: this.state.forDriver.Email,
+            FirstName: this.state.forDriver.FirstName,
+            LastName: this.state.forDriver.LastName,
+            RealId: this.state.forDriver.RealId,
+            DateOfBirth: this.state.forDriver.DateOfBirth,
+            City: this.state.forDriver.City,
+            Address: this.state.forDriver.Address,
+            PhoneNumber: this.state.forDriver.PhoneNumber,
+            VehiclePlateId: this.state.forDriver.VehiclePlateId,
+            VehicleModel: VehicleModel.target.value,
+            Password: this.state.forDriver.Password,
+            ConfirmPassword: this.state.forDriver.ConfirmPassword
         }
         this.setState({
             forDriver
@@ -401,13 +456,20 @@ class Register extends Component {
         if (!this.checkFormValidity(forUser)) {
             return;
         }
+        axios.post('http://localhost:49943/api/Registration/Customer', forUser)
+        .then((response) => {
+            console.log(response);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
 
-        console.log(forUser);
         document.getElementById("formUser").reset();
     }
 
     handleSubmitForDriver() {
         const forDriver = this.state.forDriver;
+        console.log(forDriver);
         if (!this.checkFormValidity(forDriver)) {
             return;
         }
@@ -416,7 +478,13 @@ class Register extends Component {
             return;
         }
 
-        console.log(forDriver);
+        axios.post('http://localhost:49943/api/Registration/Driver', forDriver)
+        .then((response) => {
+            console.log(response);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
         document.getElementById("formDriver").reset();
     }
 
@@ -444,12 +512,17 @@ class Register extends Component {
 
                             <div className="form-group">
                                 <label htmlFor="name">Ime:</label>
-                                <input type="text" className="form-control" id="nameUser" placeholder="Unesite ime" name="name" onChange={this.onNameChangeForUser.bind(this, "name")}/>
+                                <input type="text" className="form-control" id="nameUser" placeholder="Unesite ime" name="name" onChange={this.onNameChangeForUser.bind(this, "Name")}/>
                             </div>
 
                             <div className="form-group">
                                 <label htmlFor="lastName">Prezime:</label>
-                                <input type="text" className="form-control" id="lastnameUser" placeholder="Unesite prezime" name="lastName" onChange={this.onNameChangeForUser.bind(this, "lastName")}/>
+                                <input type="text" className="form-control" id="lastnameUser" placeholder="Unesite prezime" name="lastName" onChange={this.onNameChangeForUser.bind(this, "LastName")}/>
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor="phoneNumber">Broj telefona:</label>
+                                <input type="text" className="form-control" id="phoneNumberUser" placeholder="Unesite broj telefona" name="phoneNumber" onChange={this.onNameChangeForUser.bind(this, "PhoneNumber")}/>
                             </div>
 
                             <div className="form-group">
@@ -477,29 +550,34 @@ class Register extends Component {
 
                             <div className="form-group">
                                 <label htmlFor="name">Ime:</label>
-                                <input type="text" className="form-control" id="nameDriver" placeholder="Unesite ime" name="name" onChange={this.onNameChangeForDriver.bind(this, "name")}/>
+                                <input type="text" className="form-control" id="nameDriver" placeholder="Unesite ime" name="name" onChange={this.onNameChangeForDriver.bind(this, "Name")}/>
                             </div>
 
                             <div className="form-group">
                                 <label htmlFor="lastName">Prezime:</label>
-                                <input type="text" className="form-control" id="lastnameDriver" placeholder="Unesite prezime" name="lastName" onChange={this.onNameChangeForDriver.bind(this, "lastName")}/>
+                                <input type="text" className="form-control" id="lastnameDriver" placeholder="Unesite prezime" name="lastName" onChange={this.onNameChangeForDriver.bind(this, "LastName")}/>
                             </div>
 
                             <div className="form-group">
                                 <label htmlFor="personalId">JMGB:</label>
-                                <input type="text" className="form-control" id="personalId" placeholder="Unesite jmbg" name="personalId" onChange={this.onPersonalIdChange.bind(this)}/>
+                                <input type="text" className="form-control" id="personalId" placeholder="Unesite jmbg" name="personalId" onChange={this.onRealIdChange.bind(this)}/>
+                            </div>
+                            
+                            <div className="form-group">
+                                <label htmlFor="dateOfBirth">Datum rodjenja:</label>
+                                <input type="text" className="form-control" id="dateOfBirth" placeholder="Unesite datum rodjenja" name="dateOfBirth" onChange={this.onDateOfBirthChange.bind(this)}/>
                             </div>
 
                             <div className="form-group">
                                 <label htmlFor="city">Grad:</label>
                                 <select id="selectCity" className="form-control" onChange={this.onCityChange.bind(this)}>
-                                    <option value="bg">Beograd</option>
-                                    <option value="ns">Novi Sad</option>
-                                    <option value="kv">Kraljevo</option>
-                                    <option value="ca">Čačak</option>
-                                    <option value="ni">Nis</option>
-                                    <option value="kg">Kragujevac</option>
-                                    <option value="su">Subotica</option>
+                                    <option value="Beograd">Beograd</option>
+                                    <option value="Novi Sad">Novi Sad</option>
+                                    <option value="Kraljevo">Kraljevo</option>
+                                    <option value="Čačak">Čačak</option>
+                                    <option value="Nis">Nis</option>
+                                    <option value="Kragujevac">Kragujevac</option>
+                                    <option value="Subotica">Subotica</option>
                                 </select>
                             </div>
                             
@@ -515,7 +593,7 @@ class Register extends Component {
 
                             <div className="form-group">
                                 <label htmlFor="vehicleId">Broj tablica vozila:</label>
-                                <input type="text" className="form-control" id="vehicleId" placeholder="Unesite broj tablica" name="vehicleId" onChange={this.onVehicleIdChange.bind(this)} />
+                                <input type="text" className="form-control" id="vehicleId" placeholder="Unesite broj tablica" name="vehicleId" onChange={this.onVehiclePlateIdChange.bind(this)} />
                             </div> 
 
                             <div className="form-group">
