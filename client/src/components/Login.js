@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import '../css/Login.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
+import axios from 'axios';
 
 export default class login extends Component {
     constructor(props) {
@@ -60,9 +61,15 @@ export default class login extends Component {
         if (!valid) {
             return ;
         }
-
+        axios.post('http://localhost:49943/api/Login/Customer', forUser)
+        .then((response) => {
+            console.log(response);
+            window.location.href = "/narucivanjeVoznje";
+        })
+        .catch((error) => {
+            console.log(error);
+        });
         document.getElementById("formUser").reset();
-        console.log(forUser);
     }
 
     render() {

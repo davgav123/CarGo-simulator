@@ -9,6 +9,7 @@ import ForgotPasswordAgain from './components/ForgotPasswordAgain';
 import ResetPassword from './components/ResetPassword';
 import Profile from './components/Profile';
 import OrderDrive from './components/OrderDrive';
+import LoginFirst from './components/LoginFirst';
 
 function App() {
   return (
@@ -16,7 +17,9 @@ function App() {
       <Switch>
         <Route path="/" exact component={Homepage} />
         <Route path="/registracija" exact component={Register} />
-        <Route path="/prijavljivanje" exact component={Login} />  
+        <Route path="/prijavljivanje" exact component={Login} />
+        <Route path="/prijavljivanjePrvo/:userid/:token" exact component={LoginFirst} />  
+  
         <Route path="/zaboravljenaSifra" exact component={ForgotPassword} />
         <Route path="/forgotPasswordAgain" exact component={ForgotPasswordAgain} />     
         <Route path="/resetPassword" exact component={ResetPassword} /> 
