@@ -13,7 +13,10 @@ class Header extends React.Component {
 
         };
     }
-
+    logout() {
+        localStorage.setItem("accessToken", '');
+        localStorage.setItem("refreshToken", '');
+    }
     componentDidMount() {
         let header = document.getElementById("header");
         
@@ -21,7 +24,7 @@ class Header extends React.Component {
             this.setState({
                 buttons: [
                     <button key={1} className="btnProfile"><a href="/profil"> <span className="textBtn">Moj profil</span> </a></button>,
-                    <button key={2} className="btnLogOut"><a href="/"> <span className="textBtn">Odjavite se</span> </a></button>
+                    <button key={2} className="btnLogOut" onClick={this.logout}><a href="/"> <span className="textBtn">Odjavite se</span> </a></button>
                 ],
                 linkResponse: [
                     <li key={7}> <a href="/profil">Moj profil </a></li>,

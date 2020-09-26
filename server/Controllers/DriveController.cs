@@ -76,8 +76,9 @@ namespace CarGoSimulator.Controllers
                 return Unauthorized(ErrorEnum.NoUserLogIn);
 
             var user = await userManager.FindByNameAsync(userName);
+            // var user = userManager.FindByNameAsync(userName);
 
-            Debug.Assert(user != null);
+            // Debug.Assert(user != null);
 
             var userId = user.Id;
             var lastRequest = await GetLastRequestAsync(userId);

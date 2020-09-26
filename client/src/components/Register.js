@@ -22,7 +22,7 @@ class Register extends Component {
                 FirstName: '',
                 LastName: '',
                 RealId: '', 
-                City: '', 
+                City: 'Beograd', 
                 PhoneNumber: '',
                 VehiclePlateId: '',
                 VehicleModel: '',
@@ -142,6 +142,20 @@ class Register extends Component {
         this.setState({
             disabledUser: false,
             disabledDriver: true,
+            forDriver: {
+                Email: '',
+                FirstName: '',
+                LastName: '',
+                RealId: '', 
+                City: 'Beograd', 
+                PhoneNumber: '',
+                VehiclePlateId: '',
+                VehicleModel: '',
+                Address: '',
+                Password: '',
+                ConfirmPassword: '',
+                DateOfBirth: ''
+            },
         });
         document.getElementById("formUser").reset();
     }
@@ -336,7 +350,7 @@ class Register extends Component {
             FirstName: this.state.forDriver.FirstName,
             LastName: this.state.forDriver.LastName,
             RealId: this.state.forDriver.RealId,
-            DateOfBirth: DateOfBirth.target.target,
+            DateOfBirth: DateOfBirth.target.value,
             City: this.state.forDriver.City,
             Address: this.state.forDriver.Address,
             PhoneNumber: this.state.forDriver.PhoneNumber,
@@ -459,16 +473,18 @@ class Register extends Component {
         axios.post('http://localhost:49943/api/Registration/Customer', forUser)
         .then((response) => {
             console.log(response);
+            window.alert("Poslat Vam je mejl za aktivaciju naloga");
+            document.getElementById("formUser").reset();
         })
         .catch((error) => {
             console.log(error);
         });
 
-        document.getElementById("formUser").reset();
     }
 
     handleSubmitForDriver() {
         const forDriver = this.state.forDriver;
+        console.log(this.state);
         console.log(forDriver);
         if (!this.checkFormValidity(forDriver)) {
             return;
@@ -481,11 +497,12 @@ class Register extends Component {
         axios.post('http://localhost:49943/api/Registration/Driver', forDriver)
         .then((response) => {
             console.log(response);
+            window.alert("Poslat Vam je mejl za aktivaciju naloga");
+            document.getElementById("formDriver").reset();
         })
         .catch((error) => {
             console.log(error);
         });
-        document.getElementById("formDriver").reset();
     }
 
     render() {

@@ -8,6 +8,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import '../css/MapForOrder.css';
 import { withGoogleMap, withScriptjs, GoogleMap, Marker, Polyline } from 'react-google-maps';
 import { compose } from "recompose";
+import axios from 'axios';
 
 
 let path = [];
@@ -234,33 +235,84 @@ export default class Map extends React.Component {
 
     submitOrder() {
         if (this.state.city !== 'none' || this.state.addressStart !== '' || this.state.addressEnd !== '') {
-            path = [
-                { lat: 18.558908, lng: -68.389916 },
-                { lat: 18.558853, lng: -68.389922 },
-                { lat: 18.558375, lng: -68.389729 },
-                { lat: 18.558032, lng: -68.389182 },
-                { lat: 18.55805, lng: -68.388613 },
-                { lat: 18.558256, lng: -68.388213 },
-                { lat: 18.558744, lng: -68.387929 }
-            ];
-
-            center = {
-                lat: path[0].lat,
-                lng: path[0].lng
+            let accessToken = localStorage.getItem("accessToken");
+            // let refreshToken = localStorage.getItem("refreshToken");
+            const body = {
+                StartAddress: this.state.addressStart,
+                Locality: this.state.city,
+                EndAddress: this.state.addressEnd
+            }
+            const config = {
+                headers: { Authorization: `Bearer ${accessToken}` }
             };
 
-            initialDate = new Date();
-            dist = 0;
-            this.setState({
-                center: center,
-                path: path,
-                open: true,
-                indForOrder: true
+            axios.post('http://localhost:49943/api/Drive/Customer', body, config)
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((error) => {
+                console.log(error);
             });
-            let dialog = document.getElementById("dialog");
-            dialog.style.display = "none";
-            let table = document.getElementById("infoForDrive");
-            table.style.display = "block";
+            // const tokens = {
+            //     AccessToken: accessToken,
+            //     RefreshToken: refreshToken
+            // };
+
+            // axios.post('http://localhost:49943/api/Token/Refresh', tokens)
+            // .then((response) => {
+            //     accessToken = response.data.accessToken;
+            //     refreshToken = response.data.refreshToken;
+            //     localStorage.setItem("accessToken", accessToken);
+            //     localStorage.setItem("refreshToken", refreshToken);
+                
+            //     const body = {
+            //         StartAddress: this.state.addressStart,
+            //         Locality: this.state.city,
+            //         EndAddress: this.state.addressEnd
+            //     }
+            //     const config = {
+            //         headers: { Authorization: `Bearer ${accessToken}` }
+            //     };
+    
+            //     axios.post('http://localhost:49943/api/Drive/Customer', body, config)
+            //     .then((response) => {
+            //         console.log(response);
+            //     })
+            //     .catch((error) => {
+            //         console.log(error);
+            //     });
+            // })
+            // .catch((error) => {
+            //     console.log(error);
+            // });
+            
+            // path = [
+            //     { lat: 18.558908, lng: -68.389916 },
+            //     { lat: 18.558853, lng: -68.389922 },
+            //     { lat: 18.558375, lng: -68.389729 },
+            //     { lat: 18.558032, lng: -68.389182 },
+            //     { lat: 18.55805, lng: -68.388613 },
+            //     { lat: 18.558256, lng: -68.388213 },
+            //     { lat: 18.558744, lng: -68.387929 }
+            // ];
+
+            // center = {
+            //     lat: path[0].lat,
+            //     lng: path[0].lng
+            // };
+
+            // initialDate = new Date();
+            // dist = 0;
+            // this.setState({
+            //     center: center,
+            //     path: path,
+            //     open: true,
+            //     indForOrder: true
+            // });
+            // let dialog = document.getElementById("dialog");
+            // dialog.style.display = "none";
+            // let table = document.getElementById("infoForDrive");
+            // table.style.display = "block";
             
         } else {
             window.alert("Niste uneli adresu");
